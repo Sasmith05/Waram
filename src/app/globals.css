@@ -1,26 +1,72 @@
 @import "tailwindcss";
 
+@theme {
+  --color-gold-50: #faf8f5;
+  --color-gold-100: #f5eedc;
+  --color-gold-200: #e5d2aa;
+  --color-gold-300: #d4b87c;
+  --color-gold-400: #c1a056;
+  --color-gold-500: #A8823A; /* Accent Gold - Deeper and more visible on white */
+  --color-gold-600: #937233; /* Text Gold - High contrast readability */
+  --color-gold-700: #7D612B;
+  --color-gold-800: #685023;
+  --color-gold-900: #4B3B19;
+  
+  --color-navy-950: #ffffff; /* Replaced dark navy with white */
+  --color-navy-900: #f8fafc; /* Replaced with slate-50 */
+  --color-navy-800: #ffffff; /* Replaced with white */
+  --color-navy-700: #f1f5f9; /* Replaced with slate-100 */
+  --color-navy-600: #e2e8f0; /* Replaced with slate-200 */
+
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-inter);
+}
+
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground: #0f172a;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+::-webkit-scrollbar-thumb {
+  background: #C8A45D;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b18d45;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom glow utility for luxury premium legal feeling */
+.gold-glow {
+  box-shadow: 0 4px 20px rgba(200, 164, 93, 0.08);
+}
+.gold-glow-hover:hover {
+  box-shadow: 0 10px 30px rgba(200, 164, 93, 0.15);
+  border-color: rgba(200, 164, 93, 0.4);
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #e5d2aa 0%, #A8823A 50%, #7D612B 100%);
+}
+
+.gold-text-gradient {
+  background: linear-gradient(135deg, #A8823A 0%, #BD9A53 50%, #685023 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
