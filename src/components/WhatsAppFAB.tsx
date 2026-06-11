@@ -4,8 +4,11 @@ import React, { useState, useEffect } from "react";
 import { contactInfo } from "@/data/content";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { useLanguage } from "@/contexts/LanguageContext";
+
 export default function WhatsAppFAB() {
   const [isVisible, setIsVisible] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     // Show button after scrolling down 200px
@@ -36,7 +39,7 @@ export default function WhatsAppFAB() {
         >
           {/* Tooltip (Clean White Background with Slate Text and Gold Border) */}
           <div className="hidden sm:block bg-white border border-gold-500/30 text-slate-800 font-medium text-xs py-2 px-3.5 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none tracking-wide font-sans">
-            Chat with us
+            {t("contact.tooltipChat")}
           </div>
 
           {/* Floating Action Button */}

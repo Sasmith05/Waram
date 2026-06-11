@@ -2,6 +2,8 @@ export interface Property {
   id: string;
   slug: string;
   title: string;
+  title_en?: string;
+  title_ta?: string;
   property_type: 'residential-plots' | 'agricultural-lands' | 'commercial-lands' | 'farm-lands' | 'investment-properties';
   categoryDisplay?: string;
   location?: string;
@@ -9,6 +11,8 @@ export interface Property {
   price: number;
   price_display: string;
   description: string;
+  description_en?: string;
+  description_ta?: string;
   detailed_description: string;
   map_url?: string;
   latitude?: number;

@@ -2,6 +2,8 @@ export interface Property {
   id: string;
   slug?: string;
   title: string;
+  title_en?: string;
+  title_ta?: string;
   category: 'residential-plots' | 'agricultural-lands' | 'commercial-lands' | 'farm-lands' | 'investment-properties';
   categoryDisplay: string;
   images: string[];
@@ -10,6 +12,8 @@ export interface Property {
   price: number;
   priceDisplay: string;
   description: string;
+  description_en?: string;
+  description_ta?: string;
   detailedDescription: string;
   googleMapsEmbedUrl?: string;
   googleMapsRedirectUrl?: string;
@@ -28,6 +32,8 @@ export const propertiesData: Property[] = [
   {
     id: "residential-plot-paramakudi",
     title: "DTCP Approved Residential Plot",
+    title_en: "DTCP Approved Residential Plot",
+    title_ta: "DTCP அங்கீகரிக்கப்பட்ட குடியிருப்பு மனை",
     category: "residential-plots",
     categoryDisplay: "Residential Plots",
     images: ["/properties/plot1.png", "/properties/plot2.png", "/properties/plot3.png"],
@@ -36,6 +42,8 @@ export const propertiesData: Property[] = [
     price: 500000,
     priceDisplay: "₹5,00,000",
     description: "DTCP-approved residential plot suitable for immediate registration and construction.",
+    description_en: "DTCP-approved residential plot suitable for immediate registration and construction.",
+    description_ta: "Paramakudi-யில் உடனடியாக பதிவு செய்ய மற்றும் வீடு கட்ட தகுதியான DTCP அங்கீகரிக்கப்பட்ட குடியிருப்பு மனை.",
     detailedDescription: "Well-located residential property with clear title, excellent road access, and registration-ready documentation. Positioned in a rapidly growing neighborhood of Paramakudi, this plot offers the perfect foundation for building a dream home. The layout is fully approved under DTCP regulations, ensuring secure property lines and immediate patta transfer availability.",
     googleMapsEmbedUrl: "https://maps.google.com/maps?q=9.5444%2C78.5914&t=&z=14&ie=UTF8&iwloc=&output=embed",
     googleMapsRedirectUrl: "https://www.google.com/maps/search/?api=1&query=9.5444%2C78.5914",
@@ -64,6 +72,8 @@ export const propertiesData: Property[] = [
   {
     id: "agricultural-coconut-grove-rameswaram",
     title: "Fertile Coconut Grove (Agricultural Land)",
+    title_en: "Fertile Coconut Grove (Agricultural Land)",
+    title_ta: "விவசாய தென்னை தோப்பு",
     category: "agricultural-lands",
     categoryDisplay: "Agricultural Lands",
     images: ["/properties/plot2.png", "/properties/plot3.png", "/properties/plot1.png"],
@@ -72,6 +82,8 @@ export const propertiesData: Property[] = [
     price: 1500000,
     priceDisplay: "₹15,00,000",
     description: "High-yield fertile agricultural land featuring an established coconut grove with free farm electricity.",
+    description_en: "High-yield fertile agricultural land featuring an established coconut grove with free farm electricity.",
+    description_ta: "ராமேஸ்வரத்தில் இலவச விவசாய மின்சார வசதியுடன் கூடிய நல்ல மகசூல் தரும் விவசாய தென்னை தோப்பு.",
     detailedDescription: "A prime piece of agricultural land containing mature, yielding coconut palms. The soil is highly fertile and regularly cultivated. Located in a scenic area of Rameswaram with close access to sub-registrar offices, this property features clear titles and single-owner patta documents. Excellent for ongoing farming or agricultural development.",
     googleMapsEmbedUrl: "https://maps.google.com/maps?q=9.2881%2C79.3129&t=&z=14&ie=UTF8&iwloc=&output=embed",
     googleMapsRedirectUrl: "https://www.google.com/maps/search/?api=1&query=9.2881%2C79.3129",
@@ -98,6 +110,8 @@ export const propertiesData: Property[] = [
   {
     id: "commercial-nh49-frontage-devipattinam",
     title: "Commercial Plot near NH-49 Highway",
+    title_en: "Commercial Plot near NH-49 Highway",
+    title_ta: "NH-49 நெடுஞ்சாலை அருகில் வணிக மனை",
     category: "commercial-lands",
     categoryDisplay: "Commercial Lands",
     images: ["/properties/plot3.png", "/properties/plot1.png", "/properties/plot2.png"],
@@ -106,6 +120,8 @@ export const propertiesData: Property[] = [
     price: 3500000,
     priceDisplay: "₹35,00,000",
     description: "Prime commercial land featuring direct NH-49 highway frontage, ideal for warehouses or showrooms.",
+    description_en: "Prime commercial land featuring direct NH-49 highway frontage, ideal for warehouses or showrooms.",
+    description_ta: "தேவிபட்டினத்தில் NH-49 தேசிய நெடுஞ்சாலையை ஒட்டிய கிடங்கு அல்லது ஷோரூம் அமைக்க ஏற்ற வணிக நிலம்.",
     detailedDescription: "Highly visible commercial plot boasting 80 feet of frontage directly facing the NH-49 highway in Devipattinam. This plot is perfectly suited for commercial development, showrooms, retail spaces, or warehouse facilities. The property enjoys fully verified, clear litigation-free documents ready for immediate sale deed execution.",
     googleMapsEmbedUrl: "https://maps.google.com/maps?q=9.4792%2C78.9056&t=&z=14&ie=UTF8&iwloc=&output=embed",
     googleMapsRedirectUrl: "https://www.google.com/maps/search/?api=1&query=9.4792%2C78.9056",
@@ -133,6 +149,8 @@ export const propertiesData: Property[] = [
   {
     id: "sree-nagar-investment-paramakudi",
     title: "Sree Nagar Investment Property",
+    title_en: "Sree Nagar Investment Property",
+    title_ta: "ஸ்ரீ நகர் முதலீட்டு சொத்து",
     category: "investment-properties",
     categoryDisplay: "Investment Properties",
     images: ["/properties/plot4.png", "/properties/plot5.png", "/properties/plot3.png"],
@@ -141,6 +159,8 @@ export const propertiesData: Property[] = [
     price: 800000,
     priceDisplay: "₹8,00,000",
     description: "Rapidly appreciating layout plot in Sree Nagar, perfect for long-term investment.",
+    description_en: "Rapidly appreciating layout plot in Sree Nagar, perfect for long-term investment.",
+    description_ta: "பரமக்குடி ஸ்ரீ நகர் பகுதியில் எதிர்கால முதலீட்டிற்கு ஏற்ற வேகமாக மதிப்பு உயரும் மனை.",
     detailedDescription: "Located in the rapidly expanding suburban belt of Paramakudi, this investment plot offers a high appreciation yield. The area is surrounded by recent residential villa developments and infrastructure growth. Titles are verified and validated by legal experts, ensuring a safe transaction.",
     googleMapsEmbedUrl: "https://maps.google.com/maps?q=9.5512%2C78.5789&t=&z=14&ie=UTF8&iwloc=&output=embed",
     googleMapsRedirectUrl: "https://www.google.com/maps/search/?api=1&query=9.5512%2C78.5789",
@@ -166,6 +186,8 @@ export const propertiesData: Property[] = [
   {
     id: "vgp-layout-farm-land-rameswaram",
     title: "VGP Layout Farm Land Plot",
+    title_en: "VGP Layout Farm Land Plot",
+    title_ta: "VGP லேஅவுட் பண்ணை நில மனை",
     category: "farm-lands",
     categoryDisplay: "Farm Lands",
     images: ["/properties/plot5.png", "/properties/plot1.png", "/properties/plot2.png"],
@@ -174,6 +196,8 @@ export const propertiesData: Property[] = [
     price: 1200000,
     priceDisplay: "₹12,00,000",
     description: "Farm land plot inside a secure gated community layout, close to the coastal highway.",
+    description_en: "Farm land plot inside a secure gated community layout, close to the coastal highway.",
+    description_ta: "ராமேஸ்வரத்தில் கடற்கரை சாலை அருகில் அமைந்துள்ள பாதுகாக்கப்பட்ட பண்ணை நில மனை.",
     detailedDescription: "A premium farm land layout plot inside a secure gated community in Rameswaram. The layout includes plantation trees and is situated close to the sea, making it a perfect spot for setting up a holiday farmhouse or vacation cottage. Full road access and common water facilities are managed by the layout association.",
     googleMapsEmbedUrl: "https://maps.google.com/maps?q=9.2745%2C79.2882&t=&z=14&ie=UTF8&iwloc=&output=embed",
     googleMapsRedirectUrl: "https://www.google.com/maps/search/?api=1&query=9.2745%2C79.2882",

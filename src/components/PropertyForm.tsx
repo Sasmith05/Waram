@@ -49,12 +49,14 @@ export default function PropertyForm({ initialData, isEdit = false }: PropertyFo
   const [propertyId] = useState(() => initialData?.id || Math.random().toString(36).substr(2, 9) + "-" + Math.random().toString(36).substr(2, 9));
 
   // Form Fields State
-  const [title, setTitle] = useState(initialData?.title || "");
+  const [titleEn, setTitleEn] = useState(initialData?.title_en || initialData?.title || "");
+  const [titleTa, setTitleTa] = useState(initialData?.title_ta || "");
   const [propertyType, setPropertyType] = useState<any>(initialData?.property_type || "residential-plots");
   const [location, setLocation] = useState(initialData?.location || "");
   const [area, setArea] = useState(initialData?.area || "");
   const [price, setPrice] = useState<number | string>(initialData?.price || "");
-  const [description, setDescription] = useState(initialData?.description || "");
+  const [descriptionEn, setDescriptionEn] = useState(initialData?.description_en || initialData?.description || "");
+  const [descriptionTa, setDescriptionTa] = useState(initialData?.description_ta || "");
   const [detailedDescription, setDetailedDescription] = useState(initialData?.detailed_description || "");
   const [mapUrl, setMapUrl] = useState(initialData?.map_url || "");
   const [latitude, setLatitude] = useState<number | string>(initialData?.latitude || "");
@@ -161,17 +163,21 @@ export default function PropertyForm({ initialData, isEdit = false }: PropertyFo
     if (railwayDist.trim()) nearby_facilities.push({ name: "Railway Station", distance: railwayDist });
     if (marketDist.trim()) nearby_facilities.push({ name: "Local Market", distance: marketDist });
 
-    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    const slug = titleEn.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
     const payload: any = {
       id: propertyId,
       slug,
-      title,
+      title: titleEn,
+      title_en: titleEn,
+      title_ta: titleTa,
       property_type: propertyType,
       location: location || "",
       area,
       price: Number(price),
-      description,
+      description: descriptionEn,
+      description_en: descriptionEn,
+      description_ta: descriptionTa,
       detailed_description: detailedDescription,
       map_url: mapUrl || (latitude && longitude ? `https://maps.google.com/maps?q=${latitude},${longitude}&t=&z=14&ie=UTF8&iwloc=&output=embed` : ""),
       latitude: latitude ? Number(latitude) : null,
@@ -248,17 +254,30 @@ export default function PropertyForm({ initialData, isEdit = false }: PropertyFo
               Basic Information
             </h3>
             
-            {/* Title */}
-            <div className="space-y-1">
-              <label className="block text-xs uppercase font-bold text-slate-400 tracking-wider">Property Title *</label>
-              <input
-                type="text"
-                required
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. DTCP Approved Residential Plot in Paramakudi"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 text-sm font-semibold transition-all shadow-2xs"
-              />
+            {/* Title Inputs */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="block text-xs uppercase font-bold text-slate-400 tracking-wider">Property Title (English) *</label>
+                <input
+                  type="text"
+                  required
+                  value={titleEn}
+                  onChange={(e) => setTitleEn(e.target.value)}
+                  placeholder="e.g. DTCP Approved Residential Plot in Paramakudi"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 text-sm font-semibold transition-all shadow-2xs"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="block text-xs uppercase font-bold text-slate-400 tracking-wider">Property Title (Tamil) *</label>
+                <input
+                  type="text"
+                  required
+                  value={titleTa}
+                  onChange={(e) => setTitleTa(e.target.value)}
+                  placeholder="எ.கா. DTCP அங்கீகரிக்கப்பட்ட குடியிருப்பு மனை"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 text-sm font-semibold transition-all shadow-2xs"
+                />
+              </div>
             </div>
 
             {/* Grid properties */}
@@ -355,15 +374,28 @@ export default function PropertyForm({ initialData, isEdit = false }: PropertyFo
               Descriptions
             </h3>
             
-            {/* Short snippet */}
+            {/* Short snippet English */}
             <div className="space-y-1">
-              <label className="block text-xs uppercase font-bold text-slate-400 tracking-wider">Short Description (for Listing Preview Cards) *</label>
+              <label className="block text-xs uppercase font-bold text-slate-400 tracking-wider">Short Description (English) *</label>
               <textarea
                 rows={2}
                 required
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Brief summary of property features suitable for catalog listing cards..."
+                value={descriptionEn}
+                onChange={(e) => setDescriptionEn(e.target.value)}
+                placeholder="Brief summary of property features in English..."
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 text-sm font-semibold transition-all resize-none shadow-2xs"
+              />
+            </div>
+
+            {/* Short snippet Tamil */}
+            <div className="space-y-1">
+              <label className="block text-xs uppercase font-bold text-slate-400 tracking-wider">Short Description (Tamil) *</label>
+              <textarea
+                rows={2}
+                required
+                value={descriptionTa}
+                onChange={(e) => setDescriptionTa(e.target.value)}
+                placeholder="சொத்தின் சிறப்பம்சங்கள் பற்றிய சுருக்கமான விளக்கம் (தமிழில்)..."
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 text-sm font-semibold transition-all resize-none shadow-2xs"
               />
             </div>

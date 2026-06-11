@@ -7,20 +7,22 @@ import { usePathname } from "next/navigation";
 import { Menu, X, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { useLanguage } from "@/contexts/LanguageContext";
+
 const navLinks = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
+  { key: "nav.home", href: "/" },
+  { key: "nav.about", href: "/about" },
   {
-    name: "Services",
+    key: "nav.services",
     href: "/services",
     dropdown: [
-      { name: "Legal Consultation", href: "/services#legal-consultation" },
-      { name: "Notary Services", href: "/services#notary-services" },
-      { name: "Land Registration", href: "/services#land-registration" }
+      { key: "nav.legal_consultation", href: "/services#legal-consultation" },
+      { key: "nav.notary_services", href: "/services#notary-services" },
+      { key: "nav.land_registration", href: "/services#land-registration" }
     ]
   },
-  { name: "Properties", href: "/properties" },
-  { name: "Contact", href: "/contact" }
+  { key: "nav.properties", href: "/properties" },
+  { key: "nav.contact", href: "/contact" }
 ];
 
 export default function Navbar() {
@@ -28,6 +30,7 @@ export default function Navbar() {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+  const { locale, setLocale, t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,6 +43,33 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  function LanguageToggle() {
+    return (
+      <div className="flex items-center gap-1 bg-slate-50 border border-slate-200/80 rounded-full p-0.5 shadow-sm font-sans shrink-0">
+        <button
+          onClick={() => setLocale("en")}
+          className={`px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider transition-all duration-200 cursor-pointer ${
+            locale === "en"
+              ? "bg-gold-500 text-white shadow-sm"
+              : "text-slate-500 hover:text-slate-900"
+          }`}
+        >
+          EN
+        </button>
+        <button
+          onClick={() => setLocale("ta")}
+          className={`px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider transition-all duration-200 cursor-pointer ${
+            locale === "ta"
+              ? "bg-gold-500 text-white shadow-sm"
+              : "text-slate-500 hover:text-slate-900"
+          }`}
+        >
+          தமிழ்
+        </button>
+      </div>
+    );
+  }
 
   return (
     <header
@@ -63,10 +93,10 @@ export default function Navbar() {
             </div>
             <div>
               <span className="block font-serif font-extrabold text-xl md:text-2xl text-slate-900 tracking-wide leading-tight group-hover:text-gold-600 transition-colors duration-300">
-                RAJASEKAR
+                {locale === "en" ? "RAJASEKAR" : "ராஜசேகர்"}
               </span>
               <span className="block text-[11px] md:text-xs uppercase text-gold-600 font-bold tracking-widest leading-none mt-1">
-                ADVOCATE & NOTARY PUBLIC
+                {locale === "en" ? "ADVOCATE & NOTARY PUBLIC" : "வழக்கறிஞர் & நோட்டரி பொது"}
               </span>
             </div>
           </Link>
@@ -81,7 +111,7 @@ export default function Navbar() {
                     <button
                       className="flex items-center gap-1 text-sm font-semibold tracking-wide text-slate-600 hover:text-slate-900 transition-colors duration-300 cursor-pointer focus:outline-none"
                     >
-                      <span>{link.name}</span>
+                      <span>{t(link.key)}</span>
                       <svg className="w-4 h-4 text-slate-400 group-hover:rotate-180 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
@@ -94,7 +124,7 @@ export default function Navbar() {
                           href={subLink.href}
                           className="block px-4 py-2.5 text-xs font-semibold text-slate-600 hover:text-gold-600 hover:bg-slate-50 transition-colors duration-200 border-l-2 border-transparent hover:border-gold-500"
                         >
-                          {subLink.name}
+                          {t(subLink.key)}
                         </Link>
                       ))}
                     </div>
@@ -108,7 +138,7 @@ export default function Navbar() {
                   className="relative text-sm font-semibold tracking-wide transition-colors duration-300 py-1"
                 >
                   <span className={isActive ? "text-gold-600" : "text-slate-600 hover:text-slate-900"}>
-                    {link.name}
+                    {t(link.key)}
                   </span>
                   {isActive && (
                     <motion.span
@@ -122,25 +152,30 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Consultation Button */}
-          <div className="hidden md:flex items-center">
+          {/* Consultation Button & Desktop Toggle */}
+          <div className="hidden md:flex items-center gap-4">
+            <LanguageToggle />
             <a
               href="tel:+918760555585"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-gold-500 text-gold-600 font-semibold text-sm hover:bg-gold-500 hover:text-white transition-all duration-300 active:scale-95 shadow-sm shadow-gold-500/5"
             >
               <Phone className="h-4 w-4" />
-              Book Consultation
+              {t("nav.consultation")}
             </a>
           </div>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors duration-200"
-            aria-label="Toggle Navigation Menu"
-          >
-            {isOpen ? <X className="h-6 w-6 text-gold-600" /> : <Menu className="h-6 w-6" />}
-          </button>
+          {/* Mobile Right Container */}
+          <div className="flex items-center gap-3 md:hidden">
+            <LanguageToggle />
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors duration-200"
+              aria-label="Toggle Navigation Menu"
+            >
+              {isOpen ? <X className="h-6 w-6 text-gold-600" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -164,7 +199,7 @@ export default function Navbar() {
                         onClick={() => setIsServicesOpen(!isServicesOpen)}
                         className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg font-medium text-base text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all duration-200 focus:outline-none"
                       >
-                        <span>{link.name}</span>
+                        <span>{t(link.key)}</span>
                         <svg className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isServicesOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
@@ -188,7 +223,7 @@ export default function Navbar() {
                                 }}
                                 className="block px-4 py-2 text-sm font-semibold text-slate-500 hover:text-gold-600 rounded-md transition-colors"
                               >
-                                {subLink.name}
+                                {t(subLink.key)}
                               </Link>
                             ))}
                           </motion.div>
@@ -208,7 +243,7 @@ export default function Navbar() {
                         : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                     }`}
                   >
-                    {link.name}
+                    {t(link.key)}
                   </Link>
                 );
               })}
@@ -219,7 +254,7 @@ export default function Navbar() {
                   className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-gold-400 to-gold-600 text-white font-bold text-base hover:from-gold-300 hover:to-gold-500 transition-all duration-200 shadow-sm active:scale-95"
                 >
                   <Phone className="h-5 w-5" />
-                  Book Consultation
+                  {t("nav.consultation")}
                 </a>
               </div>
             </div>

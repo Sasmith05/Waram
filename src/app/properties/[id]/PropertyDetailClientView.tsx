@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import DetailClientWrapper from "./DetailClientWrapper";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const categories = [
   { value: "all", label: "All Properties" },
@@ -38,6 +39,7 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
   const [property, setProperty] = useState<any>(initialProperty);
   const [loading, setLoading] = useState(!initialProperty);
   const [error, setError] = useState(false);
+  const { locale, t } = useLanguage();
 
   useEffect(() => {
     if (property) return;
@@ -107,7 +109,9 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
             <div className="absolute inset-0 rounded-full border-4 border-slate-100"></div>
             <div className="absolute inset-0 rounded-full border-4 border-t-gold-500 animate-spin"></div>
           </div>
-          <p className="text-sm font-semibold text-slate-500 tracking-wider">Loading Property Details...</p>
+          <p className="text-sm font-semibold text-slate-500 tracking-wider">
+            {locale === "en" ? "Loading Property Details..." : "சொத்து விவரங்கள் ஏற்றப்படுகின்றன..."}
+          </p>
         </div>
       </div>
     );
@@ -117,9 +121,115 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
     notFound();
   }
 
+  // Dynamic values
+  const title = locale === "en"
+    ? property.title_en || property.title
+    : property.title_ta || property.title;
+
+  const description = locale === "en"
+    ? property.detailedDescription || property.detailed_description || property.description_en || property.description
+    : property.description_ta || property.description;
+
   // Pre-fill WhatsApp message
-  const waMessage = `Hello, I am interested in the "${property.title}" in ${property.location} listed on your website. Please provide more details.`;
+  const waMessage = locale === "en"
+    ? `Hello, I am interested in the "${title}" in ${property.location || ""} listed on your website. Please provide more details.`
+    : `வணக்கம், உங்கள் இணையதளத்தில் உள்ள "${property.location || ""}" பகுதியில் அமைந்துள்ள "${title}" சொத்தைப் பற்றி விசாரிக்க விரும்புகிறேன். கூடுதல் விபரங்களை வழங்கவும்.`;
+  
   const waUrl = `https://wa.me/918760555585?text=${encodeURIComponent(waMessage)}`;
+
+  // Translation helpers
+  const translateLocation = (loc?: string) => {
+    if (!loc) return t("properties.locationUnavailable");
+    const lower = loc.toLowerCase().trim();
+    if (lower === "paramakudi") return locale === "en" ? "Paramakudi" : "பரமக்குடி";
+    if (lower === "rameswaram") return locale === "en" ? "Rameswaram" : "ராமேஸ்வரம்";
+    if (lower === "devipattinam") return locale === "en" ? "Devipattinam" : "தேவிபட்டினம்";
+    return loc;
+  };
+
+  const translateArea = (area: string) => {
+    if (locale === "en") return area;
+    return area
+      .replace(/Cents/gi, "சென்ட்")
+      .replace(/Cent/gi, "சென்ட்")
+      .replace(/Acres/gi, "ஏக்கர்")
+      .replace(/Acre/gi, "ஏக்கர்");
+  };
+
+  const translateCategory = (cat?: string) => {
+    const type: string = property.property_type || "";
+    if (type === "residential-plots") return locale === "en" ? "Residential Plots" : "குடியிருப்பு மனைகள்";
+    if (type === "agricultural-lands") return locale === "en" ? "Agricultural Lands" : "விவசாய நிலங்கள்";
+    if (type === "commercial-lands") return locale === "en" ? "Commercial Lands" : "வணிக நிலங்கள்";
+    if (type === "farm-lands") return locale === "en" ? "Farm Lands" : "பண்ணை நிலங்கள்";
+    if (type === "investment-properties") return locale === "en" ? "Investment Properties" : "முதலீட்டு சொத்துக்கள்";
+    return cat || type.replace("-", " ");
+  };
+
+  const translateSpec = (key: string, val: string) => {
+    if (locale === "en") return val;
+    const v = val.toLowerCase();
+    if (key === "patta") {
+      if (v.includes("single")) return "தனி பட்டா உள்ளது";
+      if (v.includes("joint")) return "கூட்டு பட்டா உள்ளது";
+      if (v.includes("available") || v.includes("ready")) return "பட்டா உள்ளது";
+    }
+    if (key === "road") {
+      return val
+        .replace(/Feet/gi, "அடி")
+        .replace(/Foot/gi, "அடி")
+        .replace(/Tar Road/gi, "தார் சாலை")
+        .replace(/Dirt Road/gi, "மண் சாலை")
+        .replace(/Gravel Road/gi, "சரளை சாலை")
+        .replace(/Access/gi, "அணுகு")
+        .replace(/Road/gi, "சாலை");
+    }
+    if (key === "water") {
+      if (v.includes("sweet")) return "சுவையான நிலத்தடி நீர் (ஆழ்துளை கிணறு தயார்)";
+      if (v.includes("open well")) return "பெரிய திறந்தவெளி கிணறு (பம்பு செட்)";
+      if (v.includes("municipal")) return "நகராட்சி குடிநீர் இணைப்பு";
+      if (v.includes("available")) return "நிலத்தடி நீர் வசதி உள்ளது";
+    }
+    if (key === "electricity") {
+      if (v.includes("3-phase") || v.includes("three phase")) return "3-முனை மின்சார இணைப்பு அருகில்";
+      if (v.includes("free agricultural")) return "இலவச விவசாய மின்சார இணைப்பு";
+      if (v.includes("domestic")) return "வீட்டு மின்சார இணைப்பு தயார்";
+      if (v.includes("commercial")) return "வணிக மின்சார இணைப்பு வசதி";
+    }
+    return val;
+  };
+
+  const translateFacility = (name: string) => {
+    if (locale === "en") return name;
+    return name
+      .replace(/Bus Stand/gi, "பேருந்து நிலையம்")
+      .replace(/Hospital/gi, "மருத்துவமனை")
+      .replace(/Railway Station/gi, "இரயில் நிலையம்")
+      .replace(/High School/gi, "உயர்நிலைப் பள்ளி")
+      .replace(/School/gi, "பள்ளி")
+      .replace(/Market/gi, "சந்தை")
+      .replace(/Beach/gi, "கடற்கரை")
+      .replace(/Temple/gi, "கோவில்")
+      .replace(/Bank/gi, "வங்கி")
+      .replace(/Junction/gi, "சந்திப்பு");
+  };
+
+  const translateHighlight = (feat: string) => {
+    if (locale === "en") return feat;
+    const f = feat.toLowerCase();
+    if (f.includes("clear title")) return "சுத்தமான சொத்துரிமை பத்திரம்";
+    if (f.includes("registration ready")) return "உடனடிப் பதிவு தயார்";
+    if (f.includes("patta available")) return "பட்டா உள்ளது";
+    if (f.includes("road access")) return "வழிப் பாதை வசதி";
+    if (f.includes("water facility")) return "தண்ணீர் வசதி";
+    if (f.includes("prime location")) return "முக்கிய அமைவிடம்";
+    if (f.includes("free farm electricity") || f.includes("electricity facility")) return "மின்சார வசதி";
+    if (f.includes("yielding trees")) return "வருமானம் தரும் மரங்கள்";
+    if (f.includes("highway frontage")) return "நெடுஞ்சாலை முகப்பு";
+    if (f.includes("high growth zone")) return "வேகமாக வளரும் பகுதி";
+    if (f.includes("gated community")) return "பாதுகாக்கப்பட்ட குடியிருப்பு";
+    return feat;
+  };
 
   // Icon mapping helper for nearby facilities
   const getFacilityIcon = (name: string) => {
@@ -154,10 +264,10 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
         <div className="mb-8">
           <Link
             href="/properties"
-            className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-gold-600 transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-gold-600 transition-colors cursor-pointer"
           >
             <ArrowLeft className="h-4.5 w-4.5" />
-            Back to All Properties
+            {locale === "en" ? "Back to All Properties" : "அனைத்து சொத்துக்களுக்கும் திரும்பு"}
           </Link>
         </div>
 
@@ -166,22 +276,22 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
           <div className="space-y-2.5">
             <div className="flex flex-wrap items-center gap-3">
               <span className="inline-block bg-gold-500/10 text-gold-600 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-gold-500/20">
-                {property.categoryDisplay}
+                {translateCategory(property.categoryDisplay)}
               </span>
               <span className={`inline-block text-xs font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-lg border shadow-xs text-white ${
                 property.status === 'sold'
                   ? 'bg-rose-600 border-rose-500/20'
                   : 'bg-emerald-600 border-emerald-500/20'
               }`}>
-                {property.status === 'sold' ? '🔴 Sold' : '🟢 Available'}
+                {property.status === 'sold' ? `🔴 ${t("properties.sold")}` : `🟢 ${t("properties.available")}`}
               </span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 tracking-wide">
-              {property.title}
+              {title}
             </h1>
             <div className="flex items-center gap-1.5 text-sm text-slate-500 font-semibold">
               <MapPin className="h-4 w-4 text-gold-500 shrink-0" />
-              <span>{property.location || "Location Unavailable"}, Tamil Nadu</span>
+              <span>{translateLocation(property.location)}, Tamil Nadu</span>
             </div>
           </div>
         </div>
@@ -193,25 +303,29 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
             
             {/* Dynamic Gallery Client Wrapper */}
             {property.images && property.images.length > 0 ? (
-              <DetailClientWrapper images={property.images} title={property.title} />
+              <DetailClientWrapper images={property.images} title={title} />
             ) : (
               <div className="w-full aspect-video bg-slate-50 border border-slate-200/60 rounded-2xl flex flex-col items-center justify-center p-8 text-center shadow-xs">
                 <Building className="h-16 w-16 text-slate-300 mb-2" />
-                <h4 className="text-slate-700 font-serif font-bold text-lg">No Images Available</h4>
-                <p className="text-slate-400 text-sm max-w-sm mt-1">This property listing does not contain any images. Contact our office for details.</p>
+                <h4 className="text-slate-700 font-serif font-bold text-lg">{t("properties.noImages")}</h4>
+                <p className="text-slate-400 text-sm max-w-sm mt-1">
+                  {locale === "en" 
+                    ? "This property listing does not contain any images. Contact our office for details."
+                    : "இந்த சொத்துப் பட்டியலில் படங்கள் எதுவும் இல்லை. கூடுதல் தகவல்களுக்கு எங்களை தொடர்பு கொள்ளவும்."}
+                </p>
               </div>
             )}
 
             {/* Property Highlights */}
             <div className="bg-slate-50 border border-slate-200/60 p-6 rounded-2xl">
               <h3 className="text-lg font-serif font-bold text-slate-900 mb-4 pb-2 border-b border-slate-200/60">
-                Property Highlights
+                {t("properties.propertyFeatures")}
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {property.features && property.features.map((feat: any, index: number) => (
                   <div key={index} className="flex gap-2 items-center bg-white p-3 rounded-xl border border-slate-200/60 shadow-xs">
                     <CheckCircle2 className="h-5 w-5 text-gold-600 shrink-0" />
-                    <span className="text-xs sm:text-sm font-semibold text-slate-700">{feat}</span>
+                    <span className="text-xs sm:text-sm font-semibold text-slate-700">{translateHighlight(feat)}</span>
                   </div>
                 ))}
               </div>
@@ -220,34 +334,34 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
             {/* Specifications Grid */}
             <div className="space-y-4">
               <h3 className="text-xl font-serif font-bold text-slate-900">
-                Technical Details & Specifications
+                {locale === "en" ? "Technical Details & Specifications" : "தொழில்நுட்ப விவரங்கள் & குறிப்புகள்"}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="border border-slate-100 rounded-xl overflow-hidden shadow-xs">
                   <table className="w-full text-sm text-left text-slate-600">
                     <tbody>
                       <tr className="border-b border-slate-100 bg-slate-50/50">
-                        <td className="px-4 py-3 font-semibold text-slate-500">Property Type</td>
-                        <td className="px-4 py-3 font-bold text-slate-800">{property.categoryDisplay}</td>
+                        <td className="px-4 py-3 font-semibold text-slate-500">{locale === "en" ? "Property Type" : "சொத்து வகை"}</td>
+                        <td className="px-4 py-3 font-bold text-slate-800">{translateCategory(property.categoryDisplay)}</td>
                       </tr>
                       <tr className="border-b border-slate-100">
-                        <td className="px-4 py-3 font-semibold text-slate-500">Location</td>
-                        <td className="px-4 py-3 font-bold text-slate-800">{property.location}</td>
+                        <td className="px-4 py-3 font-semibold text-slate-500">{locale === "en" ? "Location" : "இடம்"}</td>
+                        <td className="px-4 py-3 font-bold text-slate-800">{translateLocation(property.location)}</td>
                       </tr>
                       <tr className="border-b border-slate-100 bg-slate-50/50">
-                        <td className="px-4 py-3 font-semibold text-slate-500">Total Area</td>
-                        <td className="px-4 py-3 font-bold text-slate-800">{property.area}</td>
+                        <td className="px-4 py-3 font-semibold text-slate-500">{t("properties.area")}</td>
+                        <td className="px-4 py-3 font-bold text-slate-800">{translateArea(property.area)}</td>
                       </tr>
                       {property.surveyNumber && (
                         <tr className="border-b border-slate-100">
-                          <td className="px-4 py-3 font-semibold text-slate-500">Survey Number</td>
+                          <td className="px-4 py-3 font-semibold text-slate-500">{t("properties.surveyNumber")}</td>
                           <td className="px-4 py-3 font-mono font-bold text-slate-800">{property.surveyNumber}</td>
                         </tr>
                       )}
                       {property.pattaStatus && (
                         <tr className="bg-slate-50/50">
-                          <td className="px-4 py-3 font-semibold text-slate-500">Patta Status</td>
-                          <td className="px-4 py-3 font-bold text-slate-800">{property.pattaStatus}</td>
+                          <td className="px-4 py-3 font-semibold text-slate-500">{t("properties.pattaStatus")}</td>
+                          <td className="px-4 py-3 font-bold text-slate-800">{translateSpec("patta", property.pattaStatus)}</td>
                         </tr>
                       )}
                     </tbody>
@@ -258,16 +372,16 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
                   <table className="w-full text-sm text-left text-slate-600">
                     <tbody>
                       <tr className="border-b border-slate-100 bg-slate-50/50">
-                        <td className="px-4 py-3 font-semibold text-slate-500">Road Access</td>
-                        <td className="px-4 py-3 font-bold text-slate-800">{property.roadAccess}</td>
+                        <td className="px-4 py-3 font-semibold text-slate-500">{t("properties.roadAccess")}</td>
+                        <td className="px-4 py-3 font-bold text-slate-800">{translateSpec("road", property.roadAccess)}</td>
                       </tr>
                       <tr className="border-b border-slate-100">
-                        <td className="px-4 py-3 font-semibold text-slate-500">Water Facility</td>
-                        <td className="px-4 py-3 font-bold text-slate-800">{property.waterAvailability}</td>
+                        <td className="px-4 py-3 font-semibold text-slate-500">{t("properties.water")}</td>
+                        <td className="px-4 py-3 font-bold text-slate-800">{translateSpec("water", property.waterAvailability)}</td>
                       </tr>
                       <tr className="bg-slate-50/50">
-                        <td className="px-4 py-3 font-semibold text-slate-500">Electricity</td>
-                        <td className="px-4 py-3 font-bold text-slate-800">{property.electricityAvailability}</td>
+                        <td className="px-4 py-3 font-semibold text-slate-500">{t("properties.electricity")}</td>
+                        <td className="px-4 py-3 font-bold text-slate-800">{translateSpec("electricity", property.electricityAvailability)}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -276,15 +390,17 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
             </div>
 
             {/* Description */}
-            <div className="space-y-4">
+            <div className="space-y-4 text-left">
               <h3 className="text-xl font-serif font-bold text-slate-900">
-                Detailed Property Description
+                {t("properties.detailedDesc")}
               </h3>
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-normal">
-                {property.detailedDescription}
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-normal whitespace-pre-line">
+                {description}
               </p>
-              <p className="text-slate-500 text-sm sm:text-base leading-relaxed italic bg-slate-50 p-4 rounded-xl border-l-4 border-gold-500">
-                Well-located property with clear title, road access, and registration-ready documentation. Suitable for residential, agricultural, or investment purposes depending on the listing.
+              <p className="text-slate-505 text-xs sm:text-sm leading-relaxed italic bg-slate-50 p-4 rounded-xl border-l-4 border-gold-500">
+                {locale === "en"
+                  ? "Well-located property with clear title, road access, and registration-ready documentation. Suitable for residential, agricultural, or investment purposes depending on the listing."
+                  : "வழிகளுடன் கூடிய சிறந்த அமைவிடத்தில் அமைந்துள்ள நிலம், சுத்தமான சொத்துரிமை ஆவணம், மற்றும் உடனடியாகப் பதிவு செய்யத் தயாரான நிலையில் உள்ளது. குடியிருப்பு, விவசாயம் அல்லது முதலீட்டு நோக்கங்களுக்கு ஏற்றது."}
               </p>
             </div>
 
@@ -292,7 +408,7 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
             {property.googleMapsEmbedUrl || (property.latitude && property.longitude) ? (
               <div className="space-y-4 text-left">
                 <h3 className="text-xl font-serif font-bold text-slate-900">
-                  Exact Location & Maps
+                  {locale === "en" ? "Exact Location & Maps" : "இருப்பிட வரைபடம்"}
                 </h3>
                 <div className="bg-slate-50 border border-slate-200/80 p-2.5 rounded-2xl overflow-hidden shadow-sm">
                   <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-200 bg-white">
@@ -310,7 +426,7 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
                       allowFullScreen
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
-                      title={`Google Maps embed for ${property.title}`}
+                      title={`Google Maps embed for ${title}`}
                       className="contrast-105 brightness-95"
                     />
                   </div>
@@ -322,7 +438,7 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
                       className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 hover:border-gold-500 text-gold-600 hover:text-gold-700 font-bold text-xs uppercase tracking-wider rounded-lg shadow-xs transition-colors cursor-pointer"
                     >
                       <Map className="h-4 w-4 text-gold-500" />
-                      Open in Google Maps
+                      {t("contact.openMaps")}
                     </a>
                     <a
                       href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((property.location || property.title) + ", Tamil Nadu")}`}
@@ -331,7 +447,7 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
                       className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 hover:border-gold-500 text-gold-600 hover:text-gold-700 font-bold text-xs uppercase tracking-wider rounded-lg shadow-xs transition-colors cursor-pointer"
                     >
                       <MapPin className="h-4 w-4 text-gold-500" />
-                      Get Directions
+                      {t("contact.getDirections")}
                     </a>
                   </div>
                 </div>
@@ -339,20 +455,24 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
             ) : (
               <div className="space-y-4 text-left">
                 <h3 className="text-xl font-serif font-bold text-slate-900">
-                  Exact Location & Maps
+                  {locale === "en" ? "Exact Location & Maps" : "இருப்பிட வரைபடம்"}
                 </h3>
                 <div className="bg-slate-50 border border-slate-200/60 p-8 rounded-2xl flex flex-col items-center justify-center text-center shadow-xs">
                   <Map className="h-12 w-12 text-slate-300 mb-2" />
-                  <h4 className="text-slate-700 font-serif font-bold text-base">Location Unavailable</h4>
-                  <p className="text-slate-400 text-xs sm:text-sm max-w-sm mt-1">Specific map coordinate markers have not been provided for this property listing.</p>
+                  <h4 className="text-slate-700 font-serif font-bold text-base">{t("properties.locationUnavailable")}</h4>
+                  <p className="text-slate-400 text-xs sm:text-sm max-w-sm mt-1">
+                    {locale === "en" 
+                      ? "Specific map coordinate markers have not been provided for this property listing."
+                      : "இந்தச் சொத்து பட்டியலுக்கு வரைபட இருப்பிடக் குறிப்பான்கள் வழங்கப்படவில்லை."}
+                  </p>
                 </div>
               </div>
             )}
 
             {/* Nearby Facilities */}
-            <div className="space-y-4">
+            <div className="space-y-4 text-left">
               <h3 className="text-xl font-serif font-bold text-slate-900">
-                Nearby Facilities & Landmarks
+                {t("properties.nearbyFacilities")}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {property.nearbyFacilities && property.nearbyFacilities.map((facility: any, index: number) => (
@@ -361,8 +481,10 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
                       {getFacilityIcon(facility.name)}
                     </div>
                     <div>
-                      <span className="block text-slate-800 text-sm font-bold">{facility.name}</span>
-                      <span className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Distance: {facility.distance}</span>
+                      <span className="block text-slate-800 text-sm font-bold">{translateFacility(facility.name)}</span>
+                      <span className="text-slate-400 text-xs font-semibold uppercase tracking-wider">
+                        {locale === "en" ? "Distance: " : "தொலைவு: "}{facility.distance}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -375,46 +497,60 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
           <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24 h-fit">
             
             {/* Quick WhatsApp Redirection */}
-            <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-md border border-slate-800 space-y-4">
+            <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-md border border-slate-800 space-y-4 text-left">
               <div className="flex gap-3 items-center">
                 <div className="p-2 bg-[#25D366]/10 rounded-lg text-[#25D366]">
                   <MessageSquare className="h-5 w-5" />
                 </div>
                 <div>
-                  <h4 className="font-serif font-bold text-base text-white">Direct Inquiry</h4>
-                  <span className="text-slate-400 text-xs">Chat via WhatsApp instantly</span>
+                  <h4 className="font-serif font-bold text-base text-white">
+                    {locale === "en" ? "Direct Inquiry" : "நேரடி விசாரணை"}
+                  </h4>
+                  <span className="text-slate-400 text-xs">
+                    {locale === "en" ? "Chat via WhatsApp instantly" : "வாட்ஸ்அப்பில் உடனடியாக அரட்டையடிக்கவும்"}
+                  </span>
                 </div>
               </div>
               <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-                Connect directly with Advocate S. Rajasekar to discuss document verification, patta status, and layout registration rules.
+                {locale === "en"
+                  ? "Connect directly with Advocate S. Rajasekar to discuss document verification, patta status, and layout registration rules."
+                  : "ஆவண சரிபார்ப்பு, பட்டா நிலை மற்றும் மனைப் பதிவு விதிகள் பற்றி விவாதிக்க வழக்கறிஞர் எஸ். ராஜசேகரை நேரடியாகத் தொடர்பு கொள்ளவும்."}
               </p>
               <a
                 href={waUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 py-3.5 bg-[#25D366] hover:bg-[#1ebd59] text-white font-bold rounded-xl active:scale-[0.98] transition-all text-sm shadow-sm"
+                className="w-full flex items-center justify-center gap-2 py-3.5 bg-[#25D366] hover:bg-[#1ebd59] text-white font-bold rounded-xl active:scale-[0.98] transition-all text-sm shadow-sm cursor-pointer"
               >
                 <MessageSquare className="h-4.5 w-4.5" />
-                WhatsApp Inquiry
+                {locale === "en" ? "WhatsApp Inquiry" : "வாட்ஸ்அப் விசாரணை"}
               </a>
             </div>
 
             {/* Direct Form Inquiry */}
-            <div className="bg-white border border-slate-200/60 rounded-2xl p-6 shadow-sm space-y-6">
+            <div className="bg-white border border-slate-200/60 rounded-2xl p-6 shadow-sm space-y-6 text-left">
               <div className="border-b border-slate-100 pb-3">
-                <h4 className="font-serif font-bold text-lg text-slate-900">Send Property Inquiry</h4>
-                <p className="text-slate-400 text-xs mt-1">Submit your details to register interest</p>
+                <h4 className="font-serif font-bold text-lg text-slate-900">
+                  {locale === "en" ? "Send Property Inquiry" : "சொத்து விசாரணை அனுப்பவும்"}
+                </h4>
+                <p className="text-slate-400 text-xs mt-1">
+                  {locale === "en" ? "Submit your details to register interest" : "ஆர்வத்தை பதிவு செய்ய உங்கள் விவரங்களை சமர்ப்பிக்கவும்"}
+                </p>
               </div>
 
               {/* Interactive Inquiry Form Wrapper */}
-              <DetailClientWrapper propertyId={property.id} propertyTitle={property.title} propertyLocation={property.location} isForm={true} />
+              <DetailClientWrapper propertyId={property.id} propertyTitle={title} propertyLocation={property.location} isForm={true} />
             </div>
 
             {/* Legal Advisory Note */}
-            <div className="bg-gold-500/5 border border-gold-500/20 p-5 rounded-2xl space-y-3">
-              <h5 className="text-xs uppercase font-bold text-gold-600 tracking-wider">Registration Guidance</h5>
+            <div className="bg-gold-500/5 border border-gold-500/20 p-5 rounded-2xl space-y-3 text-left">
+              <h5 className="text-xs uppercase font-bold text-gold-600 tracking-wider">
+                {locale === "en" ? "Registration Guidance" : "நிலப் பதிவு வழிகாட்டுதல்"}
+              </h5>
               <p className="text-slate-500 text-xs leading-relaxed">
-                All listed land sales are backed by professional legal counseling at **Waram Documentation Office**. S. Rajasekar helps evaluate titles, calculate stamp duties, and schedule sub-registrar timings for a secure purchase.
+                {locale === "en"
+                  ? "All listed land sales are backed by professional legal counseling at Waram Documentation Office. S. Rajasekar helps evaluate titles, calculate stamp duties, and schedule sub-registrar timings for a secure purchase."
+                  : "பட்டியலிடப்பட்டுள்ள அனைத்து நில விற்பனைகளும் வாரம் ஆவண அலுவலகத்தில் வழங்கப்படும் தொழில்முறை சட்ட ஆலோசனையுடன் ஆதரிக்கப்படுகின்றன. பாதுகாப்பான கொள்முதல் செய்வதற்கு சொத்துரிமையை மதிப்பீடு செய்ய, முத்திரைத் தாள் கட்டணத்தைக் கணக்கிட மற்றும் சார்-பதிவாளர் நேரத்தை முன்பதிவு செய்ய வழக்கறிஞர் எஸ். ராஜசேகர் உதவுகிறார்."}
               </p>
             </div>
 

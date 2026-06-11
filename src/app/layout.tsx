@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -49,10 +50,12 @@ export default function RootLayout({
       className={`${playfair.variable} ${inter.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col font-sans bg-white text-slate-900 select-none selection:bg-gold-500 selection:text-white">
-        <Navbar />
-        <main className="flex-grow">{children}</main>
-        <Footer />
-        <WhatsAppFAB />
+        <LanguageProvider>
+          <Navbar />
+          <main className="flex-grow">{children}</main>
+          <Footer />
+          <WhatsAppFAB />
+        </LanguageProvider>
       </body>
     </html>
   );

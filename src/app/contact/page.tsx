@@ -4,11 +4,18 @@ import React from "react";
 import { Phone, Mail, MapPin, Clock, MessageSquare } from "lucide-react";
 import { contactInfo, advocateProfile } from "@/data/content";
 import ContactForm from "@/components/ContactForm";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Contact() {
+  const { locale, t } = useLanguage();
+
   const whatsappUrl = `https://wa.me/${contactInfo.whatsappNumber}?text=${encodeURIComponent(
-    contactInfo.whatsappMessage
+    t("contact.whatsappMessage")
   )}`;
+
+  const addressText = locale === "en" 
+    ? contactInfo.address 
+    : "12/8A ராமர் தீர்த்தம் வடக்கு, ராமேஸ்வரம், தமிழ்நாடு 623526, இந்தியா";
 
   return (
     <div className="relative pt-20 pb-16 bg-white text-slate-900">
@@ -21,13 +28,25 @@ export default function Contact() {
         
         {/* Page Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <span className="text-xs uppercase tracking-widest text-gold-600 font-bold font-sans">Contact Chamber</span>
+          <span className="text-xs uppercase tracking-widest text-gold-600 font-bold font-sans">
+            {locale === "en" ? "Contact Chamber" : "தொடர்பு கொள்ள"}
+          </span>
           <h1 className="text-4xl sm:text-5xl font-serif font-bold text-slate-900 tracking-wide">
-            Get in Touch for <span className="gold-text-gradient">Legal Counsel</span>
+            {locale === "en" ? (
+              <>
+                Get in Touch for <span className="gold-text-gradient">Legal Counsel</span>
+              </>
+            ) : (
+              <>
+                சட்ட ஆலோசனை பெற <span className="gold-text-gradient">தொடர்பு கொள்ளவும்</span>
+              </>
+            )}
           </h1>
           <div className="h-[2px] w-20 bg-gold-500 mx-auto" />
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-sans">
-            Need notary public attestation or land documentation registration? Speak directly or drop a message.
+            {locale === "en"
+              ? "Need notary public attestation or land documentation registration? Speak directly or drop a message."
+              : "நோட்டரி பொது சான்றொப்பம் அல்லது நில ஆவண பதிவு தேவையா? நேரடியாகப் பேசவும் அல்லது செய்தி அனுப்பவும்."}
           </p>
         </div>
 
@@ -39,7 +58,7 @@ export default function Contact() {
             {/* Contact Cards */}
             <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 sm:p-8 space-y-6">
               <h3 className="text-lg font-serif font-bold text-slate-900 border-b border-slate-200 pb-2 mb-4">
-                Office Information
+                {locale === "en" ? "Office Information" : "அலுவலகத் தகவல்"}
               </h3>
 
               <ul className="space-y-5 text-sm sm:text-base text-slate-600">
@@ -49,9 +68,11 @@ export default function Contact() {
                     <span className="font-serif font-bold text-xs">Adv</span>
                   </div>
                   <div>
-                    <span className="block text-slate-400 text-xs uppercase font-bold tracking-wider mb-0.5">Advocate Name</span>
+                    <span className="block text-slate-400 text-xs uppercase font-bold tracking-wider mb-0.5">
+                      {locale === "en" ? "Advocate Name" : "வழக்கறிஞர் பெயர்"}
+                    </span>
                     <span className="text-slate-800 font-bold text-sm">
-                      {advocateProfile.name}
+                      {locale === "en" ? advocateProfile.name : "வழக்கறிஞர் எஸ். ராஜசேகர்"}
                     </span>
                   </div>
                 </li>
@@ -62,9 +83,11 @@ export default function Contact() {
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div>
-                    <span className="block text-slate-400 text-xs uppercase font-bold tracking-wider mb-0.5">Office Address</span>
+                    <span className="block text-slate-400 text-xs uppercase font-bold tracking-wider mb-0.5">
+                      {t("contact.officeChamber")}
+                    </span>
                     <span className="text-slate-700 leading-relaxed text-sm">
-                      {contactInfo.address}
+                      {addressText}
                     </span>
                   </div>
                 </li>
@@ -75,8 +98,10 @@ export default function Contact() {
                     <Phone className="h-5 w-5" />
                   </div>
                   <div>
-                    <span className="block text-slate-400 text-xs uppercase font-bold tracking-wider mb-0.5">Phone Contact</span>
-                    <a href="tel:+918760555585" className="text-slate-800 hover:text-gold-600 transition-colors duration-200 text-sm font-semibold">
+                    <span className="block text-slate-400 text-xs uppercase font-bold tracking-wider mb-0.5">
+                      {t("contact.phone")}
+                    </span>
+                    <a href={`tel:${contactInfo.phone}`} className="text-slate-800 hover:text-gold-600 transition-colors duration-200 text-sm font-semibold cursor-pointer">
                       {contactInfo.phoneDisplay}
                     </a>
                   </div>
@@ -88,8 +113,10 @@ export default function Contact() {
                     <Mail className="h-5 w-5" />
                   </div>
                   <div>
-                    <span className="block text-slate-400 text-xs uppercase font-bold tracking-wider mb-0.5">Email Inquiries</span>
-                    <a href={`mailto:${contactInfo.email}`} className="text-slate-700 hover:text-gold-600 transition-colors duration-200 text-sm break-all font-mono">
+                    <span className="block text-slate-400 text-xs uppercase font-bold tracking-wider mb-0.5">
+                      {t("contact.email")}
+                    </span>
+                    <a href={`mailto:${contactInfo.email}`} className="text-slate-700 hover:text-gold-600 transition-colors duration-200 text-sm break-all font-mono cursor-pointer">
                       {contactInfo.email}
                     </a>
                   </div>
@@ -101,9 +128,11 @@ export default function Contact() {
                     <Clock className="h-5 w-5" />
                   </div>
                   <div>
-                    <span className="block text-slate-400 text-xs uppercase font-bold tracking-wider mb-0.5">Office Timings</span>
+                    <span className="block text-slate-400 text-xs uppercase font-bold tracking-wider mb-0.5">
+                      {locale === "en" ? "Office Timings" : "அலுவலக வேலை நேரம்"}
+                    </span>
                     <span className="text-slate-700 text-sm">
-                      Mon – Sat: 10:00 AM – 6:30 PM
+                      {locale === "en" ? "Mon – Sat: 10:00 AM – 6:30 PM" : "திங்கள் – சனி: காலை 10:00 – மாலை 6:30"}
                     </span>
                   </div>
                 </li>
@@ -115,10 +144,10 @@ export default function Contact() {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2.5 py-3.5 bg-[#25D366] text-white hover:bg-[#1ebd59] font-bold rounded-lg transition-transform duration-300 hover:scale-[1.02] active:scale-95 text-sm shadow-sm"
+                  className="w-full flex items-center justify-center gap-2.5 py-3.5 bg-[#25D366] text-white hover:bg-[#1ebd59] font-bold rounded-lg transition-transform duration-300 hover:scale-[1.02] active:scale-95 text-sm shadow-sm cursor-pointer"
                 >
                   <MessageSquare className="h-5 w-5" />
-                  Quick Inquiry on WhatsApp
+                  {locale === "en" ? "Quick Inquiry on WhatsApp" : "வாட்ஸ்அப்பில் விரைவான விசாரணை"}
                 </a>
               </div>
             </div>
@@ -129,7 +158,7 @@ export default function Contact() {
                 href={contactInfo.googleMapShareUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border border-slate-200 bg-white block group/map"
+                className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border border-slate-200 bg-white block group/map cursor-pointer"
               >
                 <iframe
                   src={contactInfo.googleMapEmbedUrl}
@@ -149,25 +178,25 @@ export default function Contact() {
                   href={contactInfo.googleMapShareUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors"
+                  className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors cursor-pointer"
                 >
-                  View Larger Map
+                  {t("contact.viewLargerMap")}
                 </a>
                 <a
                   href={contactInfo.googleMapShareUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors border-x border-slate-200"
+                  className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors border-x border-slate-200 cursor-pointer"
                 >
-                  Get Directions
+                  {t("contact.getDirections")}
                 </a>
                 <a
                   href={contactInfo.googleMapShareUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors"
+                  className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors cursor-pointer"
                 >
-                  Open in Google Maps
+                  {t("contact.openMaps")}
                 </a>
               </div>
             </div>

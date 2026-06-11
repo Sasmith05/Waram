@@ -4,8 +4,10 @@ import React, { useState } from "react";
 import { servicesData } from "@/data/content";
 import { Send, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ContactForm() {
+  const { t, locale } = useLanguage();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,19 +21,25 @@ export default function ContactForm() {
 
   const validate = () => {
     const tempErrors: Record<string, string> = {};
-    if (!formData.name.trim()) tempErrors.name = "Full Name is required";
+    if (!formData.name.trim()) {
+      tempErrors.name = t("contact.validationName");
+    }
     if (!formData.email.trim()) {
-      tempErrors.email = "Email address is required";
+      tempErrors.email = t("contact.validationEmailReq");
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      tempErrors.email = "Email address is invalid";
+      tempErrors.email = t("contact.validationEmailInv");
     }
     if (!formData.phone.trim()) {
-      tempErrors.phone = "Phone number is required";
+      tempErrors.phone = t("contact.validationPhoneReq");
     } else if (!/^[0-9+\s-]{10,15}$/.test(formData.phone)) {
-      tempErrors.phone = "Provide a valid phone number (10-12 digits)";
+      tempErrors.phone = t("contact.validationPhoneInv");
     }
-    if (!formData.service) tempErrors.service = "Please select a service";
-    if (!formData.message.trim()) tempErrors.message = "Message details are required";
+    if (!formData.service) {
+      tempErrors.service = t("contact.validationService");
+    }
+    if (!formData.message.trim()) {
+      tempErrors.message = t("contact.validationMessage");
+    }
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
@@ -91,40 +99,46 @@ export default function ContactForm() {
             <CheckCircle2 className="h-12 w-12" />
           </div>
           <h3 className="text-slate-900 font-serif font-bold text-2xl mb-3">
-            Consultation Request Received
+            {t("contact.formSuccessTitle")}
           </h3>
           <p className="text-slate-500 text-sm max-w-sm leading-relaxed mb-8">
-            Thank you for reaching out. Advocate S Rajasekar&apos;s office will review your inquiry and contact you within 24 working hours.
+            {t("contact.formSuccessText")}
           </p>
           <button
             onClick={() => setStatus("idle")}
             className="px-6 py-2.5 bg-gradient-to-r from-gold-400 to-gold-600 hover:from-gold-300 hover:to-gold-500 text-white font-bold rounded-lg transition-all duration-200 shadow-sm active:scale-95 cursor-pointer"
           >
-            Submit Another Request
+            {t("contact.formSubmitAnother")}
           </button>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <h3 className="text-slate-900 font-serif font-bold text-xl mb-1">
-              Send a Secure Message
+              {t("contact.formTitle")}
             </h3>
             <p className="text-xs text-slate-500 mb-6">
-              All communications are protected under professional privilege protocols.
+              {locale === "en" 
+                ? "All communications are protected under professional privilege protocols."
+                : "அனைத்து தொடர்புகளும் தொழில்முறை ரகசிய காப்பு நெறிமுறைகளின் கீழ் பாதுகாக்கப்படுகின்றன."}
             </p>
           </div>
 
           {status === "error" && (
             <div className="flex gap-2 items-center bg-red-50 border border-red-200 text-red-600 p-3 rounded-lg text-sm mb-4">
               <AlertCircle className="h-5 w-5 shrink-0" />
-              <span>An unexpected error occurred. Please try again.</span>
+              <span>
+                {locale === "en" 
+                  ? "An unexpected error occurred. Please try again."
+                  : "எதிர்பாராத பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்."}
+              </span>
             </div>
           )}
 
           {/* Full Name */}
           <div>
             <label htmlFor="name" className="block text-xs uppercase tracking-wider text-slate-600 font-semibold mb-2">
-              Full Name
+              {t("contact.formName")}
             </label>
             <input
               type="text"
@@ -132,7 +146,7 @@ export default function ContactForm() {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="e.g. Rahul Verma"
+              placeholder={locale === "en" ? "e.g. Rahul Verma" : "எ.கா. ராகுல் வர்மா"}
               className={`w-full px-4 py-3 bg-slate-50 border ${
                 errors.name ? "border-red-400" : "border-slate-200 focus:border-gold-500"
               } text-slate-900 rounded-lg text-sm focus:outline-none transition-all duration-200 placeholder:text-slate-400`}
@@ -144,7 +158,7 @@ export default function ContactForm() {
             {/* Email */}
             <div>
               <label htmlFor="email" className="block text-xs uppercase tracking-wider text-slate-600 font-semibold mb-2">
-                Email Address
+                {t("contact.formEmail")}
               </label>
               <input
                 type="email"
@@ -152,7 +166,7 @@ export default function ContactForm() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="e.g. rahul@example.com"
+                placeholder={locale === "en" ? "e.g. rahul@example.com" : "எ.கா. rahul@example.com"}
                 className={`w-full px-4 py-3 bg-slate-50 border ${
                   errors.email ? "border-red-400" : "border-slate-200 focus:border-gold-500"
                 } text-slate-900 rounded-lg text-sm focus:outline-none transition-all duration-200 placeholder:text-slate-400`}
@@ -163,7 +177,7 @@ export default function ContactForm() {
             {/* Phone */}
             <div>
               <label htmlFor="phone" className="block text-xs uppercase tracking-wider text-slate-600 font-semibold mb-2">
-                Phone Number
+                {t("contact.formPhone")}
               </label>
               <input
                 type="tel"
@@ -171,7 +185,7 @@ export default function ContactForm() {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder="e.g. +91 99887 76655"
+                placeholder={locale === "en" ? "e.g. +91 99887 76655" : "எ.கா. +91 99887 76655"}
                 className={`w-full px-4 py-3 bg-slate-50 border ${
                   errors.phone ? "border-red-400" : "border-slate-200 focus:border-gold-500"
                 } text-slate-900 rounded-lg text-sm focus:outline-none transition-all duration-200 placeholder:text-slate-400`}
@@ -183,7 +197,7 @@ export default function ContactForm() {
           {/* Service requested */}
           <div>
             <label htmlFor="service" className="block text-xs uppercase tracking-wider text-slate-600 font-semibold mb-2">
-              Service Required
+              {t("contact.formService")}
             </label>
             <select
               id="service"
@@ -195,11 +209,11 @@ export default function ContactForm() {
               } text-slate-900 rounded-lg text-sm focus:outline-none transition-all duration-200 cursor-pointer`}
             >
               <option value="" disabled className="text-slate-500">
-                Select a Service...
+                {locale === "en" ? "Select a Service..." : "ஒரு சேவையைத் தேர்ந்தெடுக்கவும்..."}
               </option>
               {servicesData.map((svc) => (
                 <option key={svc.id} value={svc.title} className="text-slate-900 bg-white">
-                  {svc.title}
+                  {t(`services.items.${svc.id}.title`)}
                 </option>
               ))}
             </select>
@@ -209,7 +223,7 @@ export default function ContactForm() {
           {/* Message */}
           <div>
             <label htmlFor="message" className="block text-xs uppercase tracking-wider text-slate-600 font-semibold mb-2">
-              Case Summary / Inquiries
+              {t("contact.formMessage")}
             </label>
             <textarea
               id="message"
@@ -217,7 +231,7 @@ export default function ContactForm() {
               value={formData.message}
               onChange={handleChange}
               rows={4}
-              placeholder="Briefly describe your legal or documentation requirements..."
+              placeholder={locale === "en" ? "Briefly describe your legal or documentation requirements..." : "உங்கள் சட்ட அல்லது ஆவண தேவைகளை சுருக்கமாக விவரிக்கவும்..."}
               className={`w-full px-4 py-3 bg-slate-50 border ${
                 errors.message ? "border-red-400" : "border-slate-200 focus:border-gold-500"
               } text-slate-900 rounded-lg text-sm focus:outline-none transition-all duration-200 placeholder:text-slate-400 resize-none`}
@@ -229,17 +243,17 @@ export default function ContactForm() {
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="w-full flex items-center justify-center gap-2.5 px-6 py-3.5 bg-gradient-to-r from-gold-400 to-gold-600 text-white font-bold rounded-lg hover:from-gold-300 hover:to-gold-500 transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+            className="w-full flex items-center justify-center gap-2.5 px-6 py-3.5 bg-gradient-to-r from-gold-400 to-gold-600 text-white font-bold rounded-lg hover:from-gold-300 hover:to-gold-500 transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-sm cursor-pointer"
           >
             {status === "submitting" ? (
               <>
                 <Loader2 className="h-5 w-5 animate-spin" />
-                Encrypting & Transmitting...
+                {locale === "en" ? "Encrypting & Transmitting..." : "சமர்ப்பிக்கப்படுகிறது..."}
               </>
             ) : (
               <>
                 <Send className="h-4 w-4" />
-                Request Legal Consultation
+                {t("contact.formSubmit")}
               </>
             )}
           </button>

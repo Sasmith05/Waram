@@ -5,9 +5,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { Phone, MapPin, Mail } from "lucide-react";
 import { contactInfo, advocateProfile } from "@/data/content";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { locale, t } = useLanguage();
+
+  const addressText = locale === "en" 
+    ? contactInfo.address 
+    : "12/8A ராமர் தீர்த்தம் வடக்கு, ராமேஸ்வரம், தமிழ்நாடு 623526, இந்தியா";
 
   return (
     <footer className="bg-slate-50 border-t border-slate-200 text-slate-600 font-sans">
@@ -28,25 +34,25 @@ export default function Footer() {
               </div>
               <div>
                 <span className="block font-serif font-extrabold text-base text-slate-900 tracking-wide leading-tight">
-                  RAJASEKAR
+                  {locale === "en" ? "RAJASEKAR" : "ராஜசேகர்"}
                 </span>
                 <span className="block text-[9px] uppercase text-gold-600 font-bold tracking-widest leading-none mt-0.5">
-                  ADVOCATE & NOTARY PUBLIC
+                  {locale === "en" ? "ADVOCATE & NOTARY PUBLIC" : "வழக்கறிஞர் & நோட்டரி பொது"}
                 </span>
               </div>
             </Link>
-            <p className="text-sm text-slate-500 max-w-sm">
-              Providing trusted legal consultation, notary public services, and land registration support with professional expertise and reliable documentation assistance.
+            <p className="text-sm text-slate-500 max-w-sm leading-relaxed">
+              {t("services.description")}
             </p>
           </div>
 
           {/* Office & Address */}
           <div className="space-y-3">
             <h4 className="text-slate-900 font-bold text-sm tracking-wide uppercase font-serif">
-              Office
+              {locale === "en" ? "Office" : "அலுவலகம்"}
             </h4>
             <div className="space-y-2 text-sm text-slate-500">
-              <p className="font-semibold text-slate-800">WARAM DOCUMENTATION OFFICE</p>
+              <p className="font-semibold text-slate-800">{t("about.chamberName")}</p>
               <a 
                 href={contactInfo.googleMapShareUrl}
                 target="_blank"
@@ -54,7 +60,7 @@ export default function Footer() {
                 className="flex gap-2.5 items-start hover:text-gold-600 transition-colors duration-200 text-left"
               >
                 <MapPin className="h-4.5 w-4.5 text-gold-500 shrink-0 mt-0.5" />
-                <span>{contactInfo.address}</span>
+                <span>{addressText}</span>
               </a>
             </div>
           </div>
@@ -62,7 +68,7 @@ export default function Footer() {
           {/* Contact Details */}
           <div className="space-y-3">
             <h4 className="text-slate-900 font-bold text-sm tracking-wide uppercase font-serif">
-              Contact Us
+              {locale === "en" ? "Contact Us" : "தொடர்பு கொள்ள"}
             </h4>
             <div className="space-y-2.5 text-sm text-slate-500">
               <div className="flex gap-2.5 items-center">
@@ -81,20 +87,28 @@ export default function Footer() {
           </div>
 
         </div>
+
+        {/* Legal Disclaimer Block */}
+        <div className="mt-8 pt-8 border-t border-slate-200/60 text-slate-400 text-xs leading-relaxed">
+          <strong className="block text-slate-600 font-semibold mb-1 uppercase tracking-wider">
+            {t("footer.legalDisclaimer")}:
+          </strong>
+          <p>{t("footer.disclaimerText")}</p>
+        </div>
       </div>
 
       {/* Lower Copyright Area */}
       <div className="border-t border-slate-200 text-xs py-5 bg-slate-100/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-400">
           <p className="text-center sm:text-left text-slate-500">
-            &copy; {currentYear} {advocateProfile.name}. All rights reserved.
+            &copy; {currentYear} {locale === "en" ? advocateProfile.name : "வழக்கறிஞர் எஸ். ராஜசேகர்"}. {t("footer.rightsReserved")}
           </p>
           <div className="flex gap-6 text-slate-500">
             <Link href="/contact" className="hover:text-slate-700 transition-colors duration-200">
-              Disclaimer
+              {locale === "en" ? "Disclaimer" : "பொறுப்புத் துறப்பு"}
             </Link>
             <Link href="/services" className="hover:text-slate-700 transition-colors duration-200">
-              Terms of Service
+              {locale === "en" ? "Services" : "சேவைகள்"}
             </Link>
           </div>
         </div>
@@ -102,3 +116,4 @@ export default function Footer() {
     </footer>
   );
 }
+

@@ -4,19 +4,12 @@ import React, { useState, useEffect } from "react";
 import { propertiesData } from "@/data/properties";
 import { supabase } from "@/lib/supabase";
 import PropertyCard from "@/components/PropertyCard";
-
-const categories = [
-  { value: "all", label: "All Properties" },
-  { value: "residential-plots", label: "Residential Plots" },
-  { value: "agricultural-lands", label: "Agricultural Lands" },
-  { value: "commercial-lands", label: "Commercial Lands" },
-  { value: "farm-lands", label: "Farm Lands" },
-  { value: "investment-properties", label: "Investment Properties" }
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function PropertiesListing() {
   const [properties, setProperties] = useState<any[]>(propertiesData);
   const [loading, setLoading] = useState(true);
+  const { locale, t } = useLanguage();
 
   useEffect(() => {
     async function loadProperties() {
@@ -26,11 +19,9 @@ export default function PropertiesListing() {
         if (error) throw error;
         if (data && data.length > 0) {
           const mapped = data.map((p: any) => {
-            const catObj = categories.find((cat) => cat.value === p.property_type);
             return {
               ...p,
               category: p.property_type,
-              categoryDisplay: catObj ? catObj.label : p.property_type,
               priceDisplay: `₹${Number(p.price).toLocaleString("en-IN")}`
             };
           });
@@ -55,13 +46,23 @@ export default function PropertiesListing() {
         
         {/* Page Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <span className="text-xs uppercase tracking-widest text-gold-600 font-bold font-sans">Browse Catalog</span>
+          <span className="text-xs uppercase tracking-widest text-gold-600 font-bold font-sans">
+            {locale === "en" ? "Browse Catalog" : "பட்டியலை உலாவுக"}
+          </span>
           <h1 className="text-4xl sm:text-5xl font-serif font-bold text-slate-900 tracking-wide">
-            Available Properties & <span className="gold-text-gradient">Land Opportunities</span>
+            {locale === "en" ? (
+              <>
+                Available Properties & <span className="gold-text-gradient">Land Opportunities</span>
+              </>
+            ) : (
+              <>
+                கிடைக்கக்கூடிய சொத்துக்கள் & <span className="gold-text-gradient">நில வாய்ப்புகள்</span>
+              </>
+            )}
           </h1>
           <div className="h-[2px] w-20 bg-gold-500 mx-auto" />
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-            Browse available residential plots, agricultural lands, and investment properties with complete details, images, and location information.
+            {t("properties.subtitle")}
           </p>
         </div>
 
@@ -81,8 +82,12 @@ export default function PropertiesListing() {
           </div>
         ) : (
           <div className="bg-slate-50 border border-slate-200/60 rounded-3xl p-12 text-center max-w-2xl mx-auto space-y-4">
-            <p className="text-slate-500 font-semibold text-lg">No properties found.</p>
-            <p className="text-slate-400 text-sm">Please check back later for available listings.</p>
+            <p className="text-slate-500 font-semibold text-lg">{t("properties.noProperties")}</p>
+            <p className="text-slate-400 text-sm">
+              {locale === "en" 
+                ? "Please check back later for available listings."
+                : "கிடைக்கக்கூடிய சொத்து பட்டியல்களுக்கு பின்னர் மீண்டும் சரிபார்க்கவும்."}
+            </p>
           </div>
         )}
 

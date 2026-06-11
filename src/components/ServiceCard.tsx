@@ -6,6 +6,7 @@ import * as Icons from "lucide-react";
 import { ServiceItem } from "@/data/content";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ServiceCardProps {
   service: ServiceItem;
@@ -15,6 +16,7 @@ interface ServiceCardProps {
 export default function ServiceCard({ service, index }: ServiceCardProps) {
   // Dynamically resolve the icon component
   const IconComponent = (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[service.iconName] || Icons.Scale;
+  const { t, locale } = useLanguage();
 
   return (
     <motion.div
@@ -35,12 +37,12 @@ export default function ServiceCard({ service, index }: ServiceCardProps) {
 
         {/* Title */}
         <h3 className="text-slate-900 font-serif font-bold text-xl mb-3 tracking-wide group-hover:text-gold-600 transition-colors duration-300">
-          {service.title}
+          {t(`services.items.${service.id}.title`)}
         </h3>
 
         {/* Description */}
         <p className="text-slate-600 text-sm leading-relaxed mb-6 font-sans">
-          {service.description}
+          {t(`services.items.${service.id}.description`)}
         </p>
       </div>
 
@@ -50,10 +52,11 @@ export default function ServiceCard({ service, index }: ServiceCardProps) {
           href={`/services#${service.id}`}
           className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-gold-600 font-semibold group-hover:text-slate-900 transition-colors duration-200 font-sans"
         >
-          Explore Details
+          {locale === "en" ? "Explore Details" : "விவரங்களை ஆராய்க"}
           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1.5" />
         </Link>
       </div>
     </motion.div>
   );
 }
+
