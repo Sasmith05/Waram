@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -9,12 +9,42 @@ import { servicesData, advocateProfile, contactInfo } from "@/data/content";
 import ServiceCard from "@/components/ServiceCard";
 import ContactForm from "@/components/ContactForm";
 import { propertiesData } from "@/data/properties";
+import { supabase } from "@/lib/supabase";
 import PropertyCard from "@/components/PropertyCard";
 
 export default function Home() {
+  const [properties, setProperties] = useState<any[]>(propertiesData);
   const whatsappUrl = `https://wa.me/${contactInfo.whatsappNumber}?text=${encodeURIComponent(
     contactInfo.whatsappMessage
   )}`;
+
+  useEffect(() => {
+    async function loadFeatured() {
+      try {
+        const { data, error } = await supabase
+          .from("properties")
+          .select("*")
+          .eq("featured", true)
+          .limit(3);
+
+        if (error) throw error;
+        if (data && data.length > 0) {
+          const mapped = data.map((p: any) => ({
+            ...p,
+            category: p.property_type,
+            categoryDisplay: p.property_type
+              .replace("-", " ")
+              .replace(/\b\w/g, (c: string) => c.toUpperCase()),
+            priceDisplay: `₹${Number(p.price).toLocaleString("en-IN")}`
+          }));
+          setProperties(mapped);
+        }
+      } catch (err) {
+        console.error("Failed to fetch featured properties from Supabase", err);
+      }
+    }
+    loadFeatured();
+  }, []);
 
   return (
     <div className="relative overflow-hidden bg-white text-slate-900">
@@ -203,8 +233,8 @@ export default function Home() {
 
           {/* Properties Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {propertiesData
-              .filter((prop) => prop.isFeatured)
+            {properties
+              .filter((prop) => prop.featured || prop.isFeatured)
               .slice(0, 3)
               .map((property) => (
                 <PropertyCard key={property.id} property={property} />

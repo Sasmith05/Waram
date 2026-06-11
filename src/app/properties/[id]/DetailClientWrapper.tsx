@@ -12,10 +12,12 @@ import {
   MessageSquare,
   CheckCircle
 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 interface DetailClientWrapperProps {
   images?: string[];
   title?: string;
+  propertyId?: string;
   propertyTitle?: string;
   propertyLocation?: string;
   isForm?: boolean;
@@ -24,6 +26,7 @@ interface DetailClientWrapperProps {
 export default function DetailClientWrapper({
   images = [],
   title = "",
+  propertyId = "",
   propertyTitle = "",
   propertyLocation = "",
   isForm = false
@@ -52,7 +55,7 @@ export default function DetailClientWrapper({
   };
 
   // Form Submit validation
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errors: Record<string, string> = {};
 
@@ -76,8 +79,22 @@ export default function DetailClientWrapper({
     }
 
     // Success Action
-    setFormErrors({});
-    setIsSubmitted(true);
+    try {
+      const { error } = await supabase.from("enquiries").insert({
+        property_id: propertyId || null,
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email || null,
+        message: formData.message
+      });
+
+      if (error) throw error;
+
+      setFormErrors({});
+      setIsSubmitted(true);
+    } catch (err: any) {
+      alert(`Submission failed: ${err.message}`);
+    }
   };
 
   // RENDER DYNAMIC FORMS

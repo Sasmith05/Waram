@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { servicesData } from "@/data/content";
 import { Send, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -57,9 +58,17 @@ export default function ContactForm() {
 
     setStatus("submitting");
 
-    // Simulate API submission delay
+    // Submit to Supabase
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const { error } = await supabase.from("enquiries").insert({
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        message: `[Service Enquiry: ${formData.service}] ${formData.message}`
+      });
+
+      if (error) throw error;
+
       setStatus("success");
       setFormData({
         name: "",
@@ -68,7 +77,8 @@ export default function ContactForm() {
         service: "",
         message: "",
       });
-    } catch {
+    } catch (err) {
+      console.error("Failed to insert inquiry to Supabase", err);
       setStatus("error");
     }
   };

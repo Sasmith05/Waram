@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Search, SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import { propertiesData } from "@/data/properties";
+import { supabase } from "@/lib/supabase";
 import PropertyCard from "@/components/PropertyCard";
 
 const categories = [
@@ -15,13 +16,39 @@ const categories = [
 ];
 
 export default function PropertiesListing() {
+  const [properties, setProperties] = useState<any[]>(propertiesData);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
 
+  useEffect(() => {
+    async function loadProperties() {
+      try {
+        const { data, error } = await supabase.from("properties").select("*");
+        if (error) throw error;
+        if (data && data.length > 0) {
+          // Map properties type display
+          const mapped = data.map((p: any) => {
+            const catObj = categories.find((cat) => cat.value === p.property_type);
+            return {
+              ...p,
+              category: p.property_type,
+              categoryDisplay: catObj ? catObj.label : p.property_type,
+              priceDisplay: `₹${Number(p.price).toLocaleString("en-IN")}`
+            };
+          });
+          setProperties(mapped);
+        }
+      } catch (err) {
+        console.error("Failed to fetch public properties from Supabase", err);
+      }
+    }
+    loadProperties();
+  }, []);
+
   // Filter and sort properties
   const filteredAndSortedProperties = useMemo(() => {
-    let result = [...propertiesData];
+    let result = [...properties];
 
     // Category Filter
     if (selectedCategory !== "all") {
@@ -48,7 +75,7 @@ export default function PropertiesListing() {
     // "newest" defaults to dataset order
 
     return result;
-  }, [searchQuery, selectedCategory, sortBy]);
+  }, [properties, searchQuery, selectedCategory, sortBy]);
 
   return (
     <div className="relative pt-20 pb-16 bg-white text-slate-900 font-sans min-h-screen">
@@ -136,7 +163,7 @@ export default function PropertiesListing() {
         {/* Results Info */}
         <div className="flex justify-between items-center mb-6 text-sm text-slate-500 font-semibold px-1">
           <span>
-            Showing {filteredAndSortedProperties.length} of {propertiesData.length} properties
+            Showing {filteredAndSortedProperties.length} of {properties.length} properties
           </span>
           {searchQuery || selectedCategory !== "all" ? (
             <button
