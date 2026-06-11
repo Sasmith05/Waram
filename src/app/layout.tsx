@@ -18,21 +18,21 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Advocate S Rajasekar | Legal Consultation & Notary Services Rameswaram",
+  title: "Advocate S Rajasekar | Advocate & Notary Public",
   description:
-    "Professional legal consultation, notary public services, and land registration assistance in Rameswaram, Tamil Nadu. Guided by Advocate S Rajasekar at Waram Documentation Office.",
+    "Professional legal consultation, notary public services, and land registration at WARAM DOCUMENTATION OFFICE in Rameswaram, Tamil Nadu. Guided by Advocate S Rajasekar.",
   keywords: [
     "Advocate S Rajasekar",
-    "Lawyer in Rameswaram",
-    "Waram Documentation Office",
+    "Advocate & Notary Public",
+    "Waram Documentation Office Rameswaram",
     "Notary Public Rameswaram",
     "Land Registration Rameswaram",
     "Property Documentation Tamil Nadu"
   ],
   authors: [{ name: "Advocate S Rajasekar" }],
   openGraph: {
-    title: "Advocate S Rajasekar | Legal Consultation, Notary & Land Registration Services",
-    description: "Professional legal consultation, notary public attestation, and land registration in Rameswaram.",
+    title: "Advocate S Rajasekar | Advocate & Notary Public",
+    description: "Professional legal consultation, notary public services, and land registration at Waram Documentation Office.",
     type: "website",
     locale: "en_IN",
   },

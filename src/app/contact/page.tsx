@@ -125,7 +125,12 @@ export default function Contact() {
 
             {/* Embedded Google Maps Placeholder */}
             <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-2.5 overflow-hidden shadow-sm">
-              <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border border-slate-200 bg-white">
+              <a 
+                href={contactInfo.googleMapShareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border border-slate-200 bg-white block group/map"
+              >
                 <iframe
                   src={contactInfo.googleMapEmbedUrl}
                   width="100%"
@@ -135,12 +140,13 @@ export default function Contact() {
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   title="Waram Documentation Office Google Map"
-                  className="contrast-105 brightness-95"
+                  className="contrast-105 brightness-95 pointer-events-none"
                 />
-              </div>
+                <div className="absolute inset-0 bg-slate-950/0 group-hover/map:bg-slate-950/5 transition-colors duration-200" />
+              </a>
               <div className="grid grid-cols-3 gap-2 px-2 py-3 mt-2 font-sans text-center">
                 <a
-                  href="https://www.google.com/maps/search/?api=1&query=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526"
+                  href={contactInfo.googleMapShareUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors"
@@ -148,7 +154,7 @@ export default function Contact() {
                   View Larger Map
                 </a>
                 <a
-                  href="https://www.google.com/maps/dir/?api=1&destination=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526"
+                  href={contactInfo.googleMapShareUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors border-x border-slate-200"
@@ -156,7 +162,7 @@ export default function Contact() {
                   Get Directions
                 </a>
                 <a
-                  href="https://www.google.com/maps/search/?api=1&query=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526"
+                  href={contactInfo.googleMapShareUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors"

@@ -31,12 +31,12 @@ export default function Footer() {
                   RAJASEKAR
                 </span>
                 <span className="block text-[9px] uppercase text-gold-600 font-bold tracking-widest leading-none mt-0.5">
-                  ADVOCATE & NOTARY
+                  ADVOCATE & NOTARY PUBLIC
                 </span>
               </div>
             </Link>
             <p className="text-sm text-slate-500 max-w-sm">
-              Providing trusted legal consultation, notary services, and land registration support with professional expertise and reliable documentation assistance.
+              Providing trusted legal consultation, notary public services, and land registration support with professional expertise and reliable documentation assistance.
             </p>
           </div>
 
@@ -46,11 +46,16 @@ export default function Footer() {
               Office
             </h4>
             <div className="space-y-2 text-sm text-slate-500">
-              <p className="font-semibold text-slate-800">Waram Documentation Office</p>
-              <div className="flex gap-2.5 items-start">
+              <p className="font-semibold text-slate-800">WARAM DOCUMENTATION OFFICE</p>
+              <a 
+                href={contactInfo.googleMapShareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex gap-2.5 items-start hover:text-gold-600 transition-colors duration-200 text-left"
+              >
                 <MapPin className="h-4.5 w-4.5 text-gold-500 shrink-0 mt-0.5" />
                 <span>{contactInfo.address}</span>
-              </div>
+              </a>
             </div>
           </div>
 

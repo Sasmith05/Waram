@@ -65,7 +65,7 @@ export default function Home() {
                 transition={{ duration: 0.8, delay: 0.1 }}
                 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-slate-900 leading-[1.15] tracking-wide"
               >
-                Trusted Legal Consultation, Notary & <span className="gold-text-gradient">Land Registration</span> Services
+                Trusted Legal Consultation, Notary Public & <span className="gold-text-gradient">Land Registration</span> Services
               </motion.h1>
 
               <motion.p
@@ -74,7 +74,7 @@ export default function Home() {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="text-slate-600 text-base sm:text-lg leading-relaxed font-sans"
               >
-                Professional legal consultation, notary services, and land registration assistance in Rameswaram. Led by Advocate S. Rajasekar, dedicated to providing trustworthy guidance, accurate documentation, and seamless legal solutions.
+                Professional legal consultation, notary public services, and land registration assistance. Led by Advocate S. Rajasekar, dedicated to providing trustworthy guidance, accurate documentation, and seamless legal solutions.
               </motion.p>
 
               {/* Action Buttons */}
@@ -146,13 +146,13 @@ export default function Home() {
             {/* Right Box: Bio details & contact facts */}
             <div className="lg:col-span-7 space-y-6">
               <p className="text-slate-600 leading-relaxed text-base sm:text-lg font-sans">
-                Advocate <strong>S. Rajasekar</strong> has been practicing law since 1996, with extensive experience in Civil Law, Property Law, and Banking Law. He provides trusted legal guidance, notary services, and registration documentation for individuals and businesses.
+                Advocate <strong>S. Rajasekar</strong> has been practicing law since 1996, with extensive experience in Civil Law, Property Law, and Banking Law. He provides trusted legal guidance, notary public services, and registration documentation for individuals and businesses.
               </p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 font-sans text-sm">
                 <div className="bg-slate-50 border border-slate-200/60 p-5 rounded-xl">
                   <span className="block text-xs uppercase text-slate-400 font-semibold tracking-wider mb-1">Office Chamber</span>
-                  <span className="text-slate-700 font-medium font-sans">Waram Documentation Office, Rameswaram</span>
+                  <span className="text-slate-700 font-medium font-sans">WARAM DOCUMENTATION OFFICE</span>
                 </div>
                 <div className="bg-slate-50 border border-slate-200/60 p-5 rounded-xl">
                   <span className="block text-xs uppercase text-slate-400 font-semibold tracking-wider mb-1">Practice Since</span>
@@ -297,7 +297,12 @@ export default function Home() {
 
               {/* Map Placeholder Card */}
               <div className="bg-slate-50 border border-slate-200/60 p-2.5 rounded-2xl overflow-hidden shadow-sm">
-                <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border border-slate-200 bg-white">
+                <a 
+                  href={contactInfo.googleMapShareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border border-slate-200 bg-white block group/map"
+                >
                   <iframe
                     src={contactInfo.googleMapEmbedUrl}
                     width="100%"
@@ -307,12 +312,13 @@ export default function Home() {
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                     title="Waram Documentation Office Location Map"
-                    className="contrast-105 brightness-95"
+                    className="contrast-105 brightness-95 pointer-events-none"
                   />
-                </div>
+                  <div className="absolute inset-0 bg-slate-950/0 group-hover/map:bg-slate-950/5 transition-colors duration-200" />
+                </a>
                 <div className="grid grid-cols-3 gap-2 px-2 py-3 mt-2 font-sans text-center">
                   <a
-                    href="https://www.google.com/maps/search/?api=1&query=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526"
+                    href={contactInfo.googleMapShareUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors"
@@ -320,7 +326,7 @@ export default function Home() {
                     View Larger Map
                   </a>
                   <a
-                    href="https://www.google.com/maps/dir/?api=1&destination=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526"
+                    href={contactInfo.googleMapShareUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors border-x border-slate-200"
@@ -328,7 +334,7 @@ export default function Home() {
                     Get Directions
                   </a>
                   <a
-                    href="https://www.google.com/maps/search/?api=1&query=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526"
+                    href={contactInfo.googleMapShareUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors"

@@ -22,7 +22,7 @@ export default function About() {
           </h1>
           <div className="h-[2px] w-20 bg-gold-500 mx-auto" />
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-sans">
-            Providing professional legal consultation, notary services, and land registration assistance in Rameswaram, Tamil Nadu.
+            Providing professional legal consultation, notary public services, and land registration assistance in Rameswaram, Tamil Nadu.
           </p>
         </div>
 
@@ -34,7 +34,7 @@ export default function About() {
             <div className="space-y-6">
               <h2 className="text-2xl font-serif font-semibold text-slate-900 tracking-wide flex items-center gap-2">
                 <Scale className="h-6 w-6 text-gold-600" />
-                Legal Consultant & Notary Public
+                Advocate & Notary Public
               </h2>
               <p className="text-slate-600 leading-relaxed text-base font-sans whitespace-pre-line">
                 {advocateProfile.aboutFull}

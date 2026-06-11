@@ -5,14 +5,15 @@ export interface Property {
   category: 'residential-plots' | 'agricultural-lands' | 'commercial-lands' | 'farm-lands' | 'investment-properties';
   categoryDisplay: string;
   images: string[];
-  location: string;
+  location?: string;
   area: string;
   price: number;
   priceDisplay: string;
   description: string;
   detailedDescription: string;
-  googleMapsEmbedUrl: string;
-  googleMapsRedirectUrl: string;
+  googleMapsEmbedUrl?: string;
+  googleMapsRedirectUrl?: string;
+  status: 'available' | 'sold';
   surveyNumber?: string;
   pattaStatus?: string;
   roadAccess: string;
@@ -57,7 +58,8 @@ export const propertiesData: Property[] = [
       { name: "Matriculation School", distance: "1.0 km" },
       { name: "Nationalized Banks & ATMs", distance: "1.2 km" }
     ],
-    isFeatured: true
+    isFeatured: true,
+    status: "available"
   },
   {
     id: "agricultural-coconut-grove-rameswaram",
@@ -90,7 +92,8 @@ export const propertiesData: Property[] = [
       { name: "Local Cooperative Bank", distance: "3.5 km" },
       { name: "National Highway NH-49 Link", distance: "1.8 km" }
     ],
-    isFeatured: true
+    isFeatured: true,
+    status: "available"
   },
   {
     id: "commercial-nh49-frontage-devipattinam",
@@ -124,7 +127,8 @@ export const propertiesData: Property[] = [
       { name: "Ramanathapuram Junction Station", distance: "12.0 km" },
       { name: "State Bank of India & ATM", distance: "0.2 km" }
     ],
-    isFeatured: true
+    isFeatured: true,
+    status: "available"
   },
   {
     id: "sree-nagar-investment-paramakudi",
@@ -156,7 +160,8 @@ export const propertiesData: Property[] = [
       { name: "Public High School", distance: "1.5 km" },
       { name: "Sree Nagar Local Market", distance: "2.5 km" }
     ],
-    isFeatured: false
+    isFeatured: false,
+    status: "available"
   },
   {
     id: "vgp-layout-farm-land-rameswaram",
@@ -189,6 +194,7 @@ export const propertiesData: Property[] = [
       { name: "Rameswaram Temple Bus Stand", distance: "6.0 km" },
       { name: "Fish Market & Port", distance: "5.0 km" }
     ],
-    isFeatured: true
+    isFeatured: true,
+    status: "available"
   }
 ];

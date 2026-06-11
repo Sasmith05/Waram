@@ -181,8 +181,8 @@ export default function AdminDashboard() {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <span className="block font-serif font-bold text-slate-800 text-sm truncate">{prop.title}</span>
-                      <span className="block text-slate-400 text-xs truncate">{prop.location} &bull; {prop.area}</span>
+                      <span className="block text-slate-800 font-serif font-bold text-sm truncate">{prop.title}</span>
+                      <span className="block text-slate-400 text-xs truncate">{prop.location || "Location Unavailable"} &bull; {prop.area}</span>
                     </div>
                   </div>
                   <div className="text-right shrink-0">

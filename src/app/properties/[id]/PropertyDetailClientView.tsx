@@ -162,25 +162,27 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
         </div>
 
         {/* Header Block */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 border-b border-slate-100 pb-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 border-b border-slate-100 pb-6 text-left">
           <div className="space-y-2.5">
-            <span className="inline-block bg-gold-500/10 text-gold-600 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-gold-500/20">
-              {property.categoryDisplay}
-            </span>
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="inline-block bg-gold-500/10 text-gold-600 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-gold-500/20">
+                {property.categoryDisplay}
+              </span>
+              <span className={`inline-block text-xs font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-lg border shadow-xs text-white ${
+                property.status === 'sold'
+                  ? 'bg-rose-600 border-rose-500/20'
+                  : 'bg-emerald-600 border-emerald-500/20'
+              }`}>
+                {property.status === 'sold' ? '🔴 Sold' : '🟢 Available'}
+              </span>
+            </div>
             <h1 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 tracking-wide">
               {property.title}
             </h1>
             <div className="flex items-center gap-1.5 text-sm text-slate-500 font-semibold">
               <MapPin className="h-4 w-4 text-gold-500 shrink-0" />
-              <span>{property.location}, Tamil Nadu</span>
+              <span>{property.location || "Location Unavailable"}, Tamil Nadu</span>
             </div>
-          </div>
-          <div className="flex flex-col md:items-end bg-slate-50 border border-slate-200/60 px-6 py-4 rounded-2xl shadow-xs">
-            <span className="text-xs text-slate-400 uppercase tracking-widest font-bold">Asking Price</span>
-            <span className="text-2xl sm:text-3xl font-bold text-gold-600 font-serif flex items-center gap-1.5">
-              <Tag className="h-6 w-6 text-gold-500 shrink-0" />
-              {property.priceDisplay}
-            </span>
           </div>
         </div>
 
@@ -190,7 +192,15 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
           <div className="lg:col-span-8 space-y-12">
             
             {/* Dynamic Gallery Client Wrapper */}
-            <DetailClientWrapper images={property.images} title={property.title} />
+            {property.images && property.images.length > 0 ? (
+              <DetailClientWrapper images={property.images} title={property.title} />
+            ) : (
+              <div className="w-full aspect-video bg-slate-50 border border-slate-200/60 rounded-2xl flex flex-col items-center justify-center p-8 text-center shadow-xs">
+                <Building className="h-16 w-16 text-slate-300 mb-2" />
+                <h4 className="text-slate-700 font-serif font-bold text-lg">No Images Available</h4>
+                <p className="text-slate-400 text-sm max-w-sm mt-1">This property listing does not contain any images. Contact our office for details.</p>
+              </div>
+            )}
 
             {/* Property Highlights */}
             <div className="bg-slate-50 border border-slate-200/60 p-6 rounded-2xl">
@@ -279,46 +289,65 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
             </div>
 
             {/* Google Maps Embed */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-serif font-bold text-slate-900">
-                Exact Location & Maps
-              </h3>
-              <div className="bg-slate-50 border border-slate-200/80 p-2.5 rounded-2xl overflow-hidden shadow-sm">
-                <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-200 bg-white">
-                  <iframe
-                    src={property.googleMapsEmbedUrl}
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title={`Google Maps embed for ${property.title}`}
-                    className="contrast-105 brightness-95"
-                  />
-                </div>
-                <div className="flex gap-4 p-4 font-sans text-center justify-center border-t border-slate-200/60 mt-2">
-                  <a
-                    href={property.googleMapsRedirectUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 hover:border-gold-500 text-gold-600 hover:text-gold-700 font-bold text-xs uppercase tracking-wider rounded-lg shadow-xs transition-colors"
-                  >
-                    <Map className="h-4 w-4 text-gold-500" />
-                    Open in Google Maps
-                  </a>
-                  <a
-                    href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(property.location + ", Tamil Nadu")}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 hover:border-gold-500 text-gold-600 hover:text-gold-700 font-bold text-xs uppercase tracking-wider rounded-lg shadow-xs transition-colors"
-                  >
-                    <MapPin className="h-4 w-4 text-gold-500" />
-                    Get Directions
-                  </a>
+            {property.googleMapsEmbedUrl || (property.latitude && property.longitude) ? (
+              <div className="space-y-4 text-left">
+                <h3 className="text-xl font-serif font-bold text-slate-900">
+                  Exact Location & Maps
+                </h3>
+                <div className="bg-slate-50 border border-slate-200/80 p-2.5 rounded-2xl overflow-hidden shadow-sm">
+                  <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-200 bg-white">
+                    <iframe
+                      src={property.googleMapsEmbedUrl && (property.googleMapsEmbedUrl.includes("embed") || property.googleMapsEmbedUrl.includes("output=embed"))
+                        ? property.googleMapsEmbedUrl
+                        : (property.latitude && property.longitude
+                            ? `https://maps.google.com/maps?q=${property.latitude},${property.longitude}&t=&z=14&ie=UTF8&iwloc=&output=embed`
+                            : `https://maps.google.com/maps?q=${encodeURIComponent(property.location || property.title)}+Tamil+Nadu&t=&z=14&ie=UTF8&iwloc=&output=embed`
+                          )
+                      }
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title={`Google Maps embed for ${property.title}`}
+                      className="contrast-105 brightness-95"
+                    />
+                  </div>
+                  <div className="flex gap-4 p-4 font-sans text-center justify-center border-t border-slate-200/60 mt-2">
+                    <a
+                      href={property.googleMapsRedirectUrl || property.googleMapsEmbedUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.location || property.title)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 hover:border-gold-500 text-gold-600 hover:text-gold-700 font-bold text-xs uppercase tracking-wider rounded-lg shadow-xs transition-colors cursor-pointer"
+                    >
+                      <Map className="h-4 w-4 text-gold-500" />
+                      Open in Google Maps
+                    </a>
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((property.location || property.title) + ", Tamil Nadu")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 hover:border-gold-500 text-gold-600 hover:text-gold-700 font-bold text-xs uppercase tracking-wider rounded-lg shadow-xs transition-colors cursor-pointer"
+                    >
+                      <MapPin className="h-4 w-4 text-gold-500" />
+                      Get Directions
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-4 text-left">
+                <h3 className="text-xl font-serif font-bold text-slate-900">
+                  Exact Location & Maps
+                </h3>
+                <div className="bg-slate-50 border border-slate-200/60 p-8 rounded-2xl flex flex-col items-center justify-center text-center shadow-xs">
+                  <Map className="h-12 w-12 text-slate-300 mb-2" />
+                  <h4 className="text-slate-700 font-serif font-bold text-base">Location Unavailable</h4>
+                  <p className="text-slate-400 text-xs sm:text-sm max-w-sm mt-1">Specific map coordinate markers have not been provided for this property listing.</p>
+                </div>
+              </div>
+            )}
 
             {/* Nearby Facilities */}
             <div className="space-y-4">

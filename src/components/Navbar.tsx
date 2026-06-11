@@ -66,7 +66,7 @@ export default function Navbar() {
                 RAJASEKAR
               </span>
               <span className="block text-[11px] md:text-xs uppercase text-gold-600 font-bold tracking-widest leading-none mt-1">
-                ADVOCATE & NOTARY
+                ADVOCATE & NOTARY PUBLIC
               </span>
             </div>
           </Link>

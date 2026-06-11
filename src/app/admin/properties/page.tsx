@@ -71,10 +71,28 @@ export default function AdminPropertiesList() {
     }
   };
 
+  const handleStatusChange = async (id: string, newStatus: "available" | "sold") => {
+    try {
+      const { error } = await supabase
+        .from("properties")
+        .update({ status: newStatus })
+        .eq("id", id);
+      
+      if (error) throw error;
+
+      // Update local state
+      setProperties((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p))
+      );
+    } catch (err: any) {
+      alert(`Failed to update property status: ${err.message}`);
+    }
+  };
+
   const filteredProperties = properties.filter(
     (p) =>
       p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (p.location || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.property_type.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -129,6 +147,7 @@ export default function AdminPropertiesList() {
                   <th className="px-6 py-4">Image</th>
                   <th className="px-6 py-4">Details</th>
                   <th className="px-6 py-4">Category</th>
+                  <th className="px-6 py-4 text-center">Status</th>
                   <th className="px-6 py-4 text-right">Price</th>
                   <th className="px-6 py-4 text-center">Featured</th>
                   <th className="px-6 py-4 text-right">Actions</th>
@@ -154,7 +173,7 @@ export default function AdminPropertiesList() {
                     <td className="px-6 py-4">
                       <span className="block font-bold text-slate-900 font-serif leading-tight">{prop.title}</span>
                       <span className="block text-slate-400 text-xs mt-1 font-semibold flex items-center gap-2">
-                        <span className="flex items-center gap-0.5"><MapPin className="h-3.5 w-3.5 text-gold-500" />{prop.location}</span>
+                        <span className="flex items-center gap-0.5"><MapPin className="h-3.5 w-3.5 text-gold-500" />{prop.location || "Location Unavailable"}</span>
                         <span className="text-slate-200">|</span>
                         <span className="flex items-center gap-0.5"><Maximize2 className="h-3.5 w-3.5 text-gold-500" />{prop.area}</span>
                       </span>
@@ -170,6 +189,18 @@ export default function AdminPropertiesList() {
                     {/* Price */}
                     <td className="px-6 py-4 text-right whitespace-nowrap font-serif font-bold text-slate-900">
                       {prop.price_display}
+                    </td>
+
+                    {/* Status Dropdown Selection */}
+                    <td className="px-6 py-4 text-center whitespace-nowrap">
+                      <select
+                        value={prop.status || "available"}
+                        onChange={(e) => handleStatusChange(prop.id, e.target.value as any)}
+                        className="px-2.5 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 cursor-pointer transition-all shadow-2xs"
+                      >
+                        <option value="available">🟢 Available</option>
+                        <option value="sold">🔴 Sold</option>
+                      </select>
                     </td>
 
                     {/* Featured Toggle */}
