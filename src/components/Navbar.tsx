@@ -10,12 +10,21 @@ import { motion, AnimatePresence } from "framer-motion";
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
-  { name: "Services", href: "/services" },
-  { name: "Contact", href: "/contact" },
+  {
+    name: "Services",
+    href: "/services",
+    dropdown: [
+      { name: "Legal Consultation", href: "/services#legal-consultation" },
+      { name: "Notary Services", href: "/services#notary-services" },
+      { name: "Land Registration", href: "/services#land-registration" }
+    ]
+  },
+  { name: "Contact", href: "/contact" }
 ];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
 
@@ -65,6 +74,32 @@ export default function Navbar() {
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
+              if (link.dropdown) {
+                return (
+                  <div key={link.href} className="relative group py-2">
+                    <button
+                      className="flex items-center gap-1 text-sm font-semibold tracking-wide text-slate-600 hover:text-slate-900 transition-colors duration-300 cursor-pointer focus:outline-none"
+                    >
+                      <span>{link.name}</span>
+                      <svg className="w-4 h-4 text-slate-400 group-hover:rotate-180 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    {/* Dropdown Menu (Desktop Hover) */}
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-56 bg-white border border-slate-200/60 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 overflow-hidden py-1">
+                      {link.dropdown.map((subLink) => (
+                        <Link
+                          key={subLink.href}
+                          href={subLink.href}
+                          className="block px-4 py-2.5 text-xs font-semibold text-slate-600 hover:text-gold-600 hover:bg-slate-50 transition-colors duration-200 border-l-2 border-transparent hover:border-gold-500"
+                        >
+                          {subLink.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                );
+              }
               return (
                 <Link
                   key={link.href}
@@ -121,6 +156,46 @@ export default function Navbar() {
             <div className="px-4 pt-2 pb-6 space-y-3">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
+                if (link.dropdown) {
+                  return (
+                    <div key={link.href} className="space-y-1">
+                      <button
+                        onClick={() => setIsServicesOpen(!isServicesOpen)}
+                        className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg font-medium text-base text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all duration-200 focus:outline-none"
+                      >
+                        <span>{link.name}</span>
+                        <svg className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isServicesOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      <AnimatePresence>
+                        {isServicesOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="pl-6 space-y-1 overflow-hidden"
+                          >
+                            {link.dropdown.map((subLink) => (
+                              <Link
+                                key={subLink.href}
+                                href={subLink.href}
+                                onClick={() => {
+                                  setIsOpen(false);
+                                  setIsServicesOpen(false);
+                                }}
+                                className="block px-4 py-2 text-sm font-semibold text-slate-500 hover:text-gold-600 rounded-md transition-colors"
+                              >
+                                {subLink.name}
+                              </Link>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                }
                 return (
                   <Link
                     key={link.href}

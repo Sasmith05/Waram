@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Scale, Award, BookOpen, Languages, CheckCircle2, ChevronRight, Phone } from "lucide-react";
+import { Scale, Award, BookOpen, CheckCircle2, ChevronRight, Phone } from "lucide-react";
 import { advocateProfile, contactInfo } from "@/data/content";
 
 export default function About() {
@@ -114,8 +114,8 @@ export default function About() {
                 {/* Phone */}
                 <div className="space-y-1">
                   <span className="text-slate-400 text-xs uppercase font-bold tracking-wider">Phone</span>
-                  <a href="tel:+918760555585" className="text-gold-600 font-bold text-base hover:text-gold-700 transition-colors block">
-                    87605 55585
+                  <a href={`tel:${contactInfo.phone}`} className="text-gold-600 font-bold text-base hover:text-gold-700 transition-colors block">
+                    {contactInfo.phoneDisplay}
                   </a>
                 </div>
               </div>

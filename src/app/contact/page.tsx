@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Phone, Mail, MapPin, Clock, MessageSquare, ExternalLink } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, MessageSquare } from "lucide-react";
 import { contactInfo, advocateProfile } from "@/data/content";
 import ContactForm from "@/components/ContactForm";
 
@@ -103,8 +103,7 @@ export default function Contact() {
                   <div>
                     <span className="block text-slate-400 text-xs uppercase font-bold tracking-wider mb-0.5">Office Timings</span>
                     <span className="text-slate-700 text-sm">
-                      Mon – Sat: 10:00 AM – 6:30 PM <br />
-                      <span className="text-gold-600 text-xs font-semibold">(Prior consultation scheduling is recommended)</span>
+                      Mon – Sat: 10:00 AM – 6:30 PM
                     </span>
                   </div>
                 </li>
@@ -139,16 +138,30 @@ export default function Contact() {
                   className="contrast-105 brightness-95"
                 />
               </div>
-              <div className="flex justify-between items-center px-2 py-3 font-sans">
-                <span className="text-xs text-slate-500">Rameswaram, Tamil Nadu</span>
+              <div className="grid grid-cols-3 gap-2 px-2 py-3 mt-2 font-sans text-center">
                 <a
                   href="https://www.google.com/maps/search/?api=1&query=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-gold-600 hover:text-slate-900 uppercase tracking-wider"
+                  className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors"
                 >
-                  Open in Maps
-                  <ExternalLink className="h-3 w-3" />
+                  View Larger Map
+                </a>
+                <a
+                  href="https://www.google.com/maps/dir/?api=1&destination=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors border-x border-slate-200"
+                >
+                  Get Directions
+                </a>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors"
+                >
+                  Open in Google Maps
                 </a>
               </div>
             </div>

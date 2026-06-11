@@ -148,11 +148,14 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-12">
-            <div>
+            <div className="max-w-2xl">
               <span className="text-xs uppercase tracking-widest text-gold-600 font-bold font-sans">Key Expertise</span>
               <h2 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 mt-1">
-                Legal Services
+                Professional Legal Services & Solutions
               </h2>
+              <p className="text-slate-500 text-sm mt-3 leading-relaxed font-sans">
+                Providing trusted legal consultation, notarial services, and land registration support with professional expertise and reliable documentation assistance.
+              </p>
             </div>
             <Link
               href="/services"
@@ -226,7 +229,7 @@ export default function Home() {
 
               {/* Map Placeholder Card */}
               <div className="bg-slate-50 border border-slate-200/60 p-2.5 rounded-2xl overflow-hidden shadow-sm">
-                <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border border-slate-200">
+                <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border border-slate-200 bg-white">
                   <iframe
                     src={contactInfo.googleMapEmbedUrl}
                     width="100%"
@@ -238,6 +241,32 @@ export default function Home() {
                     title="Waram Documentation Office Location Map"
                     className="contrast-105 brightness-95"
                   />
+                </div>
+                <div className="grid grid-cols-3 gap-2 px-2 py-3 mt-2 font-sans text-center">
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors"
+                  >
+                    View Larger Map
+                  </a>
+                  <a
+                    href="https://www.google.com/maps/dir/?api=1&destination=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors border-x border-slate-200"
+                  >
+                    Get Directions
+                  </a>
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[10px] sm:text-[11px] font-bold text-gold-600 hover:text-slate-900 uppercase tracking-wider transition-colors"
+                  >
+                    Open in Google Maps
+                  </a>
                 </div>
               </div>
             </div>

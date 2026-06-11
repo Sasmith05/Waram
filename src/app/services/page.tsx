@@ -25,7 +25,7 @@ export default function Services() {
           </h1>
           <div className="h-[2px] w-20 bg-gold-500 mx-auto" />
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-sans">
-            From legal consults to official notary attestations and property registration deeds, we offer complete guidance in Rameswaram.
+            Providing trusted legal consultation, notarial services, and land registration support with professional expertise and reliable documentation assistance.
           </p>
         </div>
 
