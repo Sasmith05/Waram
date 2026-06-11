@@ -42,7 +42,7 @@ export default function Home() {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="text-slate-600 text-base sm:text-lg leading-relaxed font-sans"
               >
-                Professional legal consultation, notary services, and land registration assistance in Rameswaram. Managed by <strong className="text-slate-900 font-semibold">Advocate S Rajasekar</strong> at Waram Documentation Office.
+                Professional legal consultation, notary services, and land registration assistance in Rameswaram. Led by Advocate S. Rajasekar, dedicated to providing trustworthy guidance, accurate documentation, and seamless legal solutions.
               </motion.p>
 
               {/* Action Buttons */}
@@ -53,7 +53,7 @@ export default function Home() {
                 className="flex flex-col sm:flex-row gap-4 pt-4 font-sans"
               >
                 <a
-                  href={`tel:${contactInfo.phone}`}
+                  href="tel:+918760555585"
                   className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-gradient-to-r from-gold-400 to-gold-600 hover:from-gold-500 hover:to-gold-700 text-white font-bold rounded-lg shadow-sm transition-all duration-300 active:scale-95 text-base"
                 >
                   <Phone className="h-5 w-5" />
@@ -100,30 +100,31 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             
             {/* Left Box: Headline */}
-            <div className="lg:col-span-5 space-y-4">
+            <div className="lg:col-span-5 space-y-5">
               <span className="text-xs uppercase tracking-widest text-gold-600 font-bold font-sans">Profile Overview</span>
               <h2 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 leading-tight">
-                Advocate S Rajasekar
+                Advocate S. Rajasekar
               </h2>
+              <p className="text-slate-505 text-sm font-semibold tracking-wide uppercase font-sans">
+                B.A., B.L. &bull; 20+ Years of Practice
+              </p>
               <div className="h-[2px] w-20 bg-gold-500" />
             </div>
 
             {/* Right Box: Bio details & contact facts */}
             <div className="lg:col-span-7 space-y-6">
               <p className="text-slate-600 leading-relaxed text-base sm:text-lg font-sans">
-                {advocateProfile.aboutShort}
+                Advocate <strong>S. Rajasekar</strong> has been practicing law since 1996, with extensive experience in Civil Law, Property Law, and Banking Law. He provides trusted legal guidance, notary services, and registration documentation for individuals and businesses.
               </p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 font-sans text-sm">
-                <div className="bg-slate-50 border border-slate-200/60 p-4 rounded-xl">
+                <div className="bg-slate-50 border border-slate-200/60 p-5 rounded-xl">
                   <span className="block text-xs uppercase text-slate-400 font-semibold tracking-wider mb-1">Office Chamber</span>
-                  <span className="text-slate-700 font-medium">{advocateProfile.aboutFull.split("at ")[1].split(" in")[0]}</span>
+                  <span className="text-slate-700 font-medium font-sans">Waram Documentation Office, Rameswaram</span>
                 </div>
-                <div className="bg-slate-50 border border-slate-200/60 p-4 rounded-xl">
-                  <span className="block text-xs uppercase text-slate-400 font-semibold tracking-wider mb-1">Phone Number</span>
-                  <a href={`tel:${contactInfo.phone}`} className="text-gold-600 font-bold hover:text-gold-700 transition-colors">
-                    {contactInfo.phoneDisplay}
-                  </a>
+                <div className="bg-slate-50 border border-slate-200/60 p-5 rounded-xl">
+                  <span className="block text-xs uppercase text-slate-400 font-semibold tracking-wider mb-1">Practice Since</span>
+                  <span className="text-slate-700 font-medium font-sans">1996 (20+ Years Experience)</span>
                 </div>
               </div>
 
@@ -132,7 +133,7 @@ export default function Home() {
                   href="/about"
                   className="inline-flex items-center gap-2 text-gold-600 font-bold hover:text-slate-900 transition-colors"
                 >
-                  View Full Credentials
+                  View Full Credentials & Areas of Expertise
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>

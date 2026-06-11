@@ -33,17 +33,17 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-white border-b border-slate-200 transition-all duration-300 ${
+      className={`sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm transition-all duration-300 ${
         isScrolled
-          ? "py-3 shadow-sm"
+          ? "py-3"
           : "py-5"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo Section */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-12 w-12 rounded-lg overflow-hidden shrink-0 group-hover:scale-105 transition-transform duration-300">
+          <Link href="/" className="flex items-center gap-4 group">
+            <div className="relative h-14 w-14 md:h-16 md:w-16 rounded-xl overflow-hidden shrink-0 group-hover:scale-105 transition-transform duration-300">
               <Image
                 src="/waram.jpg"
                 alt="Waram Logo"
@@ -52,10 +52,10 @@ export default function Navbar() {
               />
             </div>
             <div>
-              <span className="block font-serif font-bold text-lg md:text-xl text-slate-900 tracking-wide leading-tight group-hover:text-gold-600 transition-colors duration-300">
-                S RAJASEKAR
+              <span className="block font-serif font-extrabold text-xl md:text-2xl text-slate-900 tracking-wide leading-tight group-hover:text-gold-600 transition-colors duration-300">
+                RAJASEKAR
               </span>
-              <span className="block text-[10px] uppercase text-gold-600 font-semibold tracking-widest leading-none">
+              <span className="block text-[11px] md:text-xs uppercase text-gold-600 font-bold tracking-widest leading-none mt-1">
                 ADVOCATE & NOTARY
               </span>
             </div>
@@ -88,13 +88,13 @@ export default function Navbar() {
 
           {/* Consultation Button */}
           <div className="hidden md:flex items-center">
-            <Link
-              href="/contact"
+            <a
+              href="tel:+918760555585"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-gold-500 text-gold-600 font-semibold text-sm hover:bg-gold-500 hover:text-white transition-all duration-300 active:scale-95 shadow-sm shadow-gold-500/5"
             >
               <Phone className="h-4 w-4" />
               Book Consultation
-            </Link>
+            </a>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -137,14 +137,14 @@ export default function Navbar() {
                 );
               })}
               <div className="pt-4 border-t border-slate-100 px-4">
-                <Link
-                  href="/contact"
+                <a
+                  href="tel:+918760555585"
                   onClick={() => setIsOpen(false)}
                   className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-gold-400 to-gold-600 text-white font-bold text-base hover:from-gold-300 hover:to-gold-500 transition-all duration-200 shadow-sm active:scale-95"
                 >
                   <Phone className="h-5 w-5" />
                   Book Consultation
-                </Link>
+                </a>
               </div>
             </div>
           </motion.div>

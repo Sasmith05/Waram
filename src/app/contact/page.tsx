@@ -76,7 +76,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <span className="block text-slate-400 text-xs uppercase font-bold tracking-wider mb-0.5">Phone Contact</span>
-                    <a href={`tel:${contactInfo.phone}`} className="text-slate-800 hover:text-gold-600 transition-colors duration-200 text-sm font-semibold">
+                    <a href="tel:+918760555585" className="text-slate-800 hover:text-gold-600 transition-colors duration-200 text-sm font-semibold">
                       {contactInfo.phoneDisplay}
                     </a>
                   </div>
@@ -142,7 +142,7 @@ export default function Contact() {
               <div className="flex justify-between items-center px-2 py-3 font-sans">
                 <span className="text-xs text-slate-500">Rameswaram, Tamil Nadu</span>
                 <a
-                  href="https://maps.app.goo.gl/kNu5Y6wGf1kK8pM48"
+                  href="https://www.google.com/maps/search/?api=1&query=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-[11px] font-semibold text-gold-600 hover:text-slate-900 uppercase tracking-wider"

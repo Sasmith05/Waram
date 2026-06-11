@@ -36,11 +36,11 @@ export default function About() {
                 <Scale className="h-6 w-6 text-gold-600" />
                 Legal Consultant & Notary Public
               </h2>
-              <p className="text-slate-600 leading-relaxed text-base font-sans">
+              <p className="text-slate-600 leading-relaxed text-base font-sans whitespace-pre-line">
                 {advocateProfile.aboutFull}
               </p>
-              <p className="text-slate-500 leading-relaxed text-sm font-sans">
-                Advocate S Rajasekar has prioritised legal clarity and documentation accuracy across Rameswaram and local sub-registrar offices. By maintaining complete transparency and ensuring all land records are checked for title clearance, clients are guided seamlessly through deed execution.
+              <p className="text-slate-505 leading-relaxed text-sm font-sans">
+                Advocate S. Rajasekar has prioritised legal clarity and documentation accuracy across Rameswaram and local sub-registrar offices. By maintaining complete transparency and ensuring all land records are checked for title clearance, clients are guided seamlessly through deed execution.
               </p>
             </div>
 
@@ -81,38 +81,41 @@ export default function About() {
           <div className="lg:col-span-5 space-y-8">
             <div className="bg-white border border-slate-200/80 p-6 sm:p-8 rounded-2xl shadow-sm gold-glow font-sans">
               <h3 className="text-xl font-serif font-bold text-slate-900 mb-6 border-b border-slate-200 pb-3">
-                Key Details
+                Quick Information
               </h3>
 
-              <div className="space-y-6">
-                {/* Languages */}
-                <div className="pb-4 border-b border-slate-200 space-y-2">
-                  <div className="flex gap-2 items-center text-slate-500 text-sm">
-                    <Languages className="h-4 w-4 text-gold-500" />
-                    <span>Languages Spoken</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    {advocateProfile.languages.map((lang) => (
-                      <span key={lang} className="text-xs font-semibold px-2.5 py-1 bg-slate-50 border border-slate-200 text-slate-700 rounded-md">
-                        {lang}
-                      </span>
-                    ))}
-                  </div>
+              <div className="space-y-5">
+                {/* Experience */}
+                <div className="pb-3 border-b border-slate-100 space-y-1">
+                  <span className="text-slate-400 text-xs uppercase font-bold tracking-wider">Experience</span>
+                  <span className="text-slate-800 text-sm font-semibold block">20+ Years</span>
                 </div>
 
-                {/* Office address */}
-                <div className="pb-4 border-b border-slate-200 space-y-1">
-                  <span className="text-slate-500 text-sm block">Office Address</span>
-                  <span className="text-slate-800 text-sm font-medium leading-relaxed block">
-                    {contactInfo.address}
+                {/* Education */}
+                <div className="pb-3 border-b border-slate-100 space-y-1">
+                  <span className="text-slate-400 text-xs uppercase font-bold tracking-wider">Education</span>
+                  <span className="text-slate-800 text-sm font-semibold block">B.A., B.L.</span>
+                </div>
+
+                {/* Practice Since */}
+                <div className="pb-3 border-b border-slate-100 space-y-1">
+                  <span className="text-slate-400 text-xs uppercase font-bold tracking-wider">Practice Since</span>
+                  <span className="text-slate-800 text-sm font-semibold block">1996</span>
+                </div>
+
+                {/* Office */}
+                <div className="pb-3 border-b border-slate-100 space-y-1">
+                  <span className="text-slate-400 text-xs uppercase font-bold tracking-wider">Office</span>
+                  <span className="text-slate-700 text-sm font-medium block leading-relaxed">
+                    Waram Documentation Office, Rameswaram
                   </span>
                 </div>
 
-                {/* Chambers phone */}
+                {/* Phone */}
                 <div className="space-y-1">
-                  <span className="text-slate-500 text-sm block">Contact Phone</span>
-                  <a href={`tel:${contactInfo.phone}`} className="text-gold-600 font-bold text-base hover:text-gold-700 transition-colors">
-                    {contactInfo.phoneDisplay}
+                  <span className="text-slate-400 text-xs uppercase font-bold tracking-wider">Phone</span>
+                  <a href="tel:+918760555585" className="text-gold-600 font-bold text-base hover:text-gold-700 transition-colors block">
+                    87605 55585
                   </a>
                 </div>
               </div>

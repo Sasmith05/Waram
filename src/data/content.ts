@@ -29,33 +29,44 @@ export interface ContactInfo {
 }
 
 export const advocateProfile: AdvocateProfile = {
-  name: "Advocate S Rajasekar",
-  title: "Advocate & Legal Consultant",
-  aboutShort: "Providing professional legal consultation, notary services, and land registration assistance with a commitment to accuracy, transparency, and client satisfaction.",
-  aboutFull: "Advocate S Rajasekar provides dedicated legal services, notary verification, and land registration coordination at Waram Documentation Office in Rameswaram. With a strict adherence to professional standards, client satisfaction, and legal accuracy, we guide individuals and businesses through registration deeds and advisory consults.",
+  name: "Advocate S. Rajasekar",
+  title: "B.A., B.L. | Advocate | Notary Public | Founder, Waram Documentation",
+  aboutShort: "Professional legal consultation, notary services, and land registration assistance in Rameswaram. Led by Advocate S. Rajasekar, dedicated to providing trustworthy guidance, accurate documentation, and seamless legal solutions.",
+  aboutFull: "Advocate S. Rajasekar has been practicing law since 1996, with extensive experience in Civil Law, Property Law, and Banking Law. Over the years, he has successfully represented clients before courts exercising both original and appellate jurisdiction while providing trusted legal guidance to individuals, businesses, and financial institutions.\n\nAs an Empanelled Advocate for Nationalised and Public Sector Banks, he specializes in Title Verification, Title Scrutiny, Title Opinions, Mortgage Documentation, and Legal Due Diligence. His expertise includes examining property records, assessing legal risks, and providing comprehensive legal opinions that support informed decision-making.\n\nWith 14 years of experience as a Notary Public, Advocate Rajasekar has handled a wide range of notarization and authentication services, including affidavits, declarations, agreements, powers of attorney, and other legal instruments. This experience has strengthened his expertise in legal documentation, compliance, and procedural accuracy.\n\nHe also provides legal counselling and advisory services, helping clients understand their legal position and identify practical, result-oriented solutions to disputes and legal challenges.\n\nAdvocate Rajasekar is the Founder of Waram Documentation, a professional service dedicated to legal documentation, property-related paperwork, registration assistance, and consultancy services.\n\nHis professional approach is guided by integrity, diligence, transparency, and client-focused service, ensuring every client receives reliable legal support with confidence and clarity.",
   qualifications: [
-    "Bachelor of Laws (LL.B)",
-    "Member of Bar Council of Tamil Nadu & Puducherry",
-    "Appointed Notary Public & Document Writer"
+    "Bachelor of Arts (B.A.)",
+    "Bachelor of Law (B.L.)"
   ],
   practiceAreas: [
-    "Legal Consultation & Advice",
-    "Notary Public Services",
-    "Land Registration Assistance",
-    "Property Title Verification"
+    "Civil Law",
+    "Property Law",
+    "Banking Law",
+    "Legal Consultation",
+    "Land Registration",
+    "Title Verification & Scrutiny",
+    "Title Opinions",
+    "Legal Due Diligence",
+    "Mortgage Documentation",
+    "Notarial Services",
+    "Legal Drafting",
+    "Litigation",
+    "Appellate Practice",
+    "Legal Counselling",
+    "Dispute Resolution",
+    "Documentation Services"
   ],
   languages: ["English", "Tamil"],
   registrations: [
-    "Bar Council Registration",
-    "Notary License Authority"
+    "Bar Council Registration (Since 1996)",
+    "Notary Public License (14+ Years)"
   ]
 };
-
+ 
 export const servicesData: ServiceItem[] = [
   {
     id: "legal-consultation",
     title: "Legal Consultation",
-    description: "Professional legal advice and guidance on civil, property, documentation, and legal matters.",
+    description: "Professional legal advice and guidance on civil, property, and legal matters.",
     iconName: "Scale",
     details: [
       "Civil and property dispute advisory services",
@@ -89,13 +100,13 @@ export const servicesData: ServiceItem[] = [
     ]
   }
 ];
-
+ 
 export const contactInfo: ContactInfo = {
   phone: "+918760555585",
   phoneDisplay: "87605 55585",
   email: "contact@srajasekar.in",
-  address: "Waram Documentation Office, Rameswaram, Tamil Nadu",
-  googleMapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15764.08867375267!2d79.30058863618165!3d9.28822004245642!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b01e231ab3dc849%3A0xb3debb731a57cf43!2sRameswaram%2C%20Tamil%20Nadu%20623526!5e0!3m2!1sen!2sin!4v1717000000000!5m2!1sen!2sin",
+  address: "Waram Documentation Office, 78P5+QGW, Rameswaram, Tamil Nadu 623526",
+  googleMapEmbedUrl: "https://maps.google.com/maps?q=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526&t=&z=16&ie=UTF8&iwloc=&output=embed",
   whatsappNumber: "918760555585",
-  whatsappMessage: "Hello Advocate S Rajasekar, I would like to schedule a consultation regarding your services."
+  whatsappMessage: "Hello, I would like to enquire about your legal consultation services."
 };
