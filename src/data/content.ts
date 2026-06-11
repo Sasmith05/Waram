@@ -105,7 +105,7 @@ export const contactInfo: ContactInfo = {
   phone: "+918760555585",
   phoneDisplay: "87605 55585",
   email: "contact@srajasekar.in",
-  address: "Waram Documentation Office, 78P5+QGW, Rameswaram, Tamil Nadu 623526",
+  address: "Waram Documentation Office, Rameswaram, Tamil Nadu 623526",
   googleMapEmbedUrl: "https://maps.google.com/maps?q=78P5%2BQGW%2C%20Rameswaram%2C%20Tamil%20Nadu%20623526&t=&z=16&ie=UTF8&iwloc=&output=embed",
   whatsappNumber: "918760555585",
   whatsappMessage: "Hello, I would like to enquire about your legal consultation services."
