@@ -8,6 +8,8 @@ import { ArrowRight, Phone, MessageSquare } from "lucide-react";
 import { servicesData, advocateProfile, contactInfo } from "@/data/content";
 import ServiceCard from "@/components/ServiceCard";
 import ContactForm from "@/components/ContactForm";
+import { propertiesData } from "@/data/properties";
+import PropertyCard from "@/components/PropertyCard";
 
 export default function Home() {
   const whatsappUrl = `https://wa.me/${contactInfo.whatsappNumber}?text=${encodeURIComponent(
@@ -176,8 +178,44 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. Contact Section */}
+      {/* Featured Properties Section */}
       <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-12">
+            <div className="max-w-2xl">
+              <span className="text-xs uppercase tracking-widest text-gold-600 font-bold font-sans">Premium Plots & Lands</span>
+              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 mt-1">
+                Featured Properties
+              </h2>
+              <p className="text-slate-500 text-sm mt-3 leading-relaxed font-sans">
+                Explore a handpicked selection of premium land plots, agricultural coconut groves, and high-value investment properties with verified documentation.
+              </p>
+            </div>
+            <Link
+              href="/properties"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-slate-600 hover:text-slate-950 rounded-lg hover:border-gold-500 transition-colors duration-200 font-semibold text-sm shadow-sm font-sans"
+            >
+              View All Properties
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* Properties Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {propertiesData
+              .filter((prop) => prop.isFeatured)
+              .slice(0, 3)
+              .map((property) => (
+                <PropertyCard key={property.id} property={property} />
+              ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* 5. Contact Section */}
+      <section className="py-20 bg-white border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <span className="text-xs uppercase tracking-widest text-gold-600 font-bold font-sans">Contact Chamber</span>

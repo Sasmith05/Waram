@@ -19,6 +19,7 @@ const navLinks = [
       { name: "Land Registration", href: "/services#land-registration" }
     ]
   },
+  { name: "Properties", href: "/properties" },
   { name: "Contact", href: "/contact" }
 ];
 
