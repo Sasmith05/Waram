@@ -23,7 +23,7 @@ export default function Home() {
 
   const addressText = locale === "en" 
     ? contactInfo.address 
-    : "78P5+QGW, ராமேஸ்வரம், தமிழ்நாடு 623526";
+    : "12/8A ராமர் தீர்த்தம் வடக்கு, ராமேஸ்வரம், தமிழ்நாடு 623526, இந்தியா";
 
   useEffect(() => {
     async function loadFeatured() {

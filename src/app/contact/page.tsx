@@ -15,7 +15,7 @@ export default function Contact() {
 
   const addressText = locale === "en" 
     ? contactInfo.address 
-    : "78P5+QGW, ராமேஸ்வரம், தமிழ்நாடு 623526";
+    : "12/8A ராமர் தீர்த்தம் வடக்கு, ராமேஸ்வரம், தமிழ்நாடு 623526, இந்தியா";
 
   return (
     <div className="relative pt-20 pb-16 bg-white text-slate-900">

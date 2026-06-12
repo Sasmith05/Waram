@@ -106,7 +106,7 @@ export const contactInfo: ContactInfo = {
   phone: "+918760555585",
   phoneDisplay: "+91 87605 55585",
   email: "notaryrajasekar@gmail.com",
-  address: "78P5+QGW, Rameswaram, Tamil Nadu 623526",
+  address: "12/8A Ramar Theertham North, Rameswaram, Tamil Nadu 623526, India",
   googleMapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3742.6960115885286!2d79.30626137478394!3d9.286993390784984!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b01e30016d56d87%3A0xa73d99e447a9a882!2sRajasekar%20Advocate%20%26%20Notary%20Public%20(WARAM%20DOCUMENTATION)!5e1!3m2!1sen!2sin!4v1781291912489!5m2!1sen!2sin",
   googleMapShareUrl: "https://www.google.com/maps/place/Rajasekar+Advocate+%26+Notary+Public+(WARAM+DOCUMENTATION)/@9.2869934,79.3062614,17z/data=!3m1!4b1!4m6!3m5!1s0x3b01e30016d56d87:0xa73d99e447a9a882!8m2!3d9.2869934!4d79.3088363!16s%2Fg%2F11y1xp1lqm",
   whatsappNumber: "918760555585",
