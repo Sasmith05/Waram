@@ -13,7 +13,7 @@ export default function Footer() {
 
   const addressText = locale === "en" 
     ? contactInfo.address 
-    : "12/8A ராமர் தீர்த்தம் வடக்கு, ராமேஸ்வரம், தமிழ்நாடு 623526, இந்தியா";
+    : "78P5+QGW, ராமேஸ்வரம், தமிழ்நாடு 623526";
 
   return (
     <footer className="bg-slate-50 border-t border-slate-200 text-slate-600 font-sans">
