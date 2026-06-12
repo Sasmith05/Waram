@@ -46,7 +46,7 @@ export default function Contact() {
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-sans">
             {locale === "en"
               ? "Need notary public attestation or land documentation registration? Speak directly or drop a message."
-              : "நோட்டரி பொது சான்றொப்பம் அல்லது நில ஆவண பதிவு தேவையா? நேரடியாகப் பேசவும் அல்லது செய்தி அனுப்பவும்."}
+              : "நோட்டரி சான்றொப்பம் அல்லது நில ஆவண பதிவு தேவையா? நேரடியாகப் பேசவும் அல்லது செய்தி அனுப்பவும்."}
           </p>
         </div>
 

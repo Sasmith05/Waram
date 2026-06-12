@@ -1,6 +1,6 @@
 "use client";
-
-import React, { useState } from "react";
+ 
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { 
   ChevronLeft, 
@@ -13,6 +13,7 @@ import {
   CheckCircle
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface DetailClientWrapperProps {
   images?: string[];
@@ -21,6 +22,7 @@ interface DetailClientWrapperProps {
   propertyTitle?: string;
   propertyLocation?: string;
   isForm?: boolean;
+  locale?: string;
 }
 
 export default function DetailClientWrapper({
@@ -29,21 +31,38 @@ export default function DetailClientWrapper({
   propertyId = "",
   propertyTitle = "",
   propertyLocation = "",
-  isForm = false
+  isForm = false,
+  locale
 }: DetailClientWrapperProps) {
   // 1. STATE FOR GALLERY & LIGHTBOX
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
-  // 2. STATE FOR ENQUIRY FORM
+  // 2. DETECT LOCALE FROM CONTEXT OR PROP
+  const { locale: contextLocale } = useLanguage();
+  const activeLocale = locale || contextLocale || "ta";
+
+  const defaultMessage = activeLocale === "en"
+    ? `Hello, I would like to inquire about "${propertyTitle}" in ${propertyLocation}. Please provide more details regarding registration procedures.`
+    : `வணக்கம், "${propertyLocation}" பகுதியில் அமைந்துள்ள "${propertyTitle}" சொத்தைப் பற்றிய விவரங்களைக் கேட்க விரும்புகிறேன். மனைப் பதிவு நடைமுறைகள் குறித்த கூடுதல் விவரங்களை வழங்கவும்.`;
+
+  // 3. STATE FOR ENQUIRY FORM
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     email: "",
-    message: `Hello, I would like to inquire about "${propertyTitle}" in ${propertyLocation}. Please provide more details regarding registration procedures.`
+    message: ""
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Update default message if locale/property changes
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      message: defaultMessage
+    }));
+  }, [activeLocale, propertyTitle, propertyLocation]);
 
   // Gallery Navigation helpers
   const handlePrev = () => {
@@ -60,17 +79,17 @@ export default function DetailClientWrapper({
     const errors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      errors.name = "Full Name is required";
+      errors.name = activeLocale === "en" ? "Full Name is required" : "முழு பெயர் தேவை";
     }
 
     if (!formData.phone.trim()) {
-      errors.phone = "Mobile Number is required";
+      errors.phone = activeLocale === "en" ? "Mobile Number is required" : "கைபேசி எண் தேவை";
     } else if (!/^[0-9]{10,12}$/.test(formData.phone.replace(/[\s+-]/g, ""))) {
-      errors.phone = "Enter a valid mobile number (10-12 digits)";
+      errors.phone = activeLocale === "en" ? "Enter a valid mobile number (10-12 digits)" : "சரியான தொலைபேசி எண்ணை வழங்கவும் (10-12 இலக்கங்கள்)";
     }
 
     if (formData.email.trim() && !/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = "Enter a valid email address";
+      errors.email = activeLocale === "en" ? "Enter a valid email address" : "மின்னஞ்சல் முகவரி தவறானது";
     }
 
     if (Object.keys(errors).length > 0) {
@@ -93,7 +112,7 @@ export default function DetailClientWrapper({
       setFormErrors({});
       setIsSubmitted(true);
     } catch (err: any) {
-      alert(`Submission failed: ${err.message}`);
+      alert(activeLocale === "en" ? `Submission failed: ${err.message}` : `அனுப்புவதில் தோல்வி: ${err.message}`);
     }
   };
 
@@ -105,9 +124,19 @@ export default function DetailClientWrapper({
           <div className="mx-auto w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-600">
             <CheckCircle className="h-6 w-6" />
           </div>
-          <h4 className="font-bold font-serif text-lg">Enquiry Received!</h4>
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Thank you for your interest, <strong>{formData.name}</strong>. Advocate S. Rajasekar&apos;s office will contact you shortly regarding the details for <strong>{propertyTitle}</strong>.
+          <h4 className="font-bold font-serif text-lg">
+            {activeLocale === "en" ? "Enquiry Received!" : "விசாரணை பெறப்பட்டது!"}
+          </h4>
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-sans">
+            {activeLocale === "en" ? (
+              <>
+                Thank you for your interest, <strong>{formData.name}</strong>. Advocate S. Rajasekar&apos;s office will contact you shortly regarding the details for <strong>{propertyTitle}</strong>.
+              </>
+            ) : (
+              <>
+                தங்களின் ஆர்வத்திற்கு நன்றி, <strong>{formData.name}</strong>. <strong>{propertyTitle}</strong> சொத்தின் விபரங்கள் குறித்து வழக்கறிஞர் எஸ். ராஜசேகரின் அலுவலகம் உங்களை விரைவில் தொடர்பு கொள்ளும்.
+              </>
+            )}
           </p>
           <button
             onClick={() => {
@@ -116,12 +145,12 @@ export default function DetailClientWrapper({
                 name: "",
                 phone: "",
                 email: "",
-                message: `Hello, I would like to inquire about "${propertyTitle}" in ${propertyLocation}. Please provide more details regarding registration procedures.`
+                message: defaultMessage
               });
             }}
-            className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs transition-colors cursor-pointer"
+            className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs transition-colors cursor-pointer font-sans"
           >
-            Send Another Inquiry
+            {activeLocale === "en" ? "Send Another Inquiry" : "மற்றொரு விசாரணை அனுப்பவும்"}
           </button>
         </div>
       );
@@ -134,14 +163,14 @@ export default function DetailClientWrapper({
         <div className="space-y-1">
           <label className="block text-xs uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1.5">
             <User className="h-3.5 w-3.5 text-slate-400" />
-            Full Name *
+            {activeLocale === "en" ? "Full Name *" : "முழு பெயர் *"}
           </label>
           <input
             type="text"
             required
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="e.g. Ramesh Kumar"
+            placeholder={activeLocale === "en" ? "e.g. Ramesh Kumar" : "எ.கா. ரமேஷ் குமார்"}
             className={`w-full px-4 py-2.5 rounded-xl border bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 text-sm font-semibold transition-all ${
               formErrors.name ? "border-rose-400 focus:border-rose-500 focus:ring-rose-500/20" : "border-slate-200 focus:border-gold-500"
             }`}
@@ -155,14 +184,14 @@ export default function DetailClientWrapper({
         <div className="space-y-1">
           <label className="block text-xs uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1.5">
             <Phone className="h-3.5 w-3.5 text-slate-400" />
-            Mobile Number *
+            {activeLocale === "en" ? "Mobile Number *" : "கைபேசி எண் *"}
           </label>
           <input
             type="tel"
             required
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            placeholder="e.g. +91 98765 43210"
+            placeholder={activeLocale === "en" ? "e.g. +91 98765 43210" : "எ.கா. +91 98765 43210"}
             className={`w-full px-4 py-2.5 rounded-xl border bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 text-sm font-semibold transition-all ${
               formErrors.phone ? "border-rose-400 focus:border-rose-500 focus:ring-rose-500/20" : "border-slate-200 focus:border-gold-500"
             }`}
@@ -176,13 +205,13 @@ export default function DetailClientWrapper({
         <div className="space-y-1">
           <label className="block text-xs uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1.5">
             <Mail className="h-3.5 w-3.5 text-slate-400" />
-            Email Address (Optional)
+            {activeLocale === "en" ? "Email Address (Optional)" : "மின்னஞ்சல் முகவரி (விருப்பத்திற்குரியது)"}
           </label>
           <input
             type="email"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            placeholder="e.g. ramesh@example.com"
+            placeholder={activeLocale === "en" ? "e.g. ramesh@example.com" : "எ.கா. ramesh@example.com"}
             className={`w-full px-4 py-2.5 rounded-xl border bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 text-sm font-semibold transition-all ${
               formErrors.email ? "border-rose-400 focus:border-rose-500 focus:ring-rose-500/20" : "border-slate-200 focus:border-gold-500"
             }`}
@@ -196,13 +225,13 @@ export default function DetailClientWrapper({
         <div className="space-y-1">
           <label className="block text-xs uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1.5">
             <MessageSquare className="h-3.5 w-3.5 text-slate-400" />
-            Message
+            {activeLocale === "en" ? "Message" : "செய்தி"}
           </label>
           <textarea
             rows={4}
             value={formData.message}
             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-            placeholder="Write your custom query..."
+            placeholder={activeLocale === "en" ? "Write your custom query..." : "உங்கள் தனிப்பயன் கேள்வியை எழுதுங்கள்..."}
             className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 text-sm font-semibold transition-all resize-none"
           />
         </div>
@@ -210,9 +239,9 @@ export default function DetailClientWrapper({
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-gold-400 to-gold-600 text-white font-bold rounded-xl hover:from-gold-500 hover:to-gold-700 active:scale-[0.98] transition-all text-sm shadow-xs cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-gold-400 to-gold-600 text-white font-bold rounded-xl hover:from-gold-500 hover:to-gold-700 active:scale-[0.98] transition-all text-sm shadow-xs cursor-pointer font-sans"
         >
-          Send Enquiry
+          {activeLocale === "en" ? "Send Enquiry" : "சொத்து விபரங்களுக்கு தொடர்பு கொள்ளவும்"}
         </button>
       </form>
     );
@@ -234,8 +263,8 @@ export default function DetailClientWrapper({
           priority
         />
         {/* Swipe/Click overlay indicator */}
-        <span className="absolute bottom-4 right-4 bg-slate-950/80 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-white/10">
-          Click to Enlarge ({activeIndex + 1} / {images.length})
+        <span className="absolute bottom-4 right-4 bg-slate-950/80 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-white/10 font-sans">
+          {activeLocale === "en" ? "Click to Enlarge" : "பெரிதாக்க கிளிக் செய்க"} ({activeIndex + 1} / {images.length})
         </span>
 
         {/* Left/Right Navigation on Image Hover */}
@@ -330,10 +359,10 @@ export default function DetailClientWrapper({
             </button>
 
             {/* Title / Indicator Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white">
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white text-left">
               <h4 className="font-serif font-bold text-base sm:text-lg">{title}</h4>
-              <span className="text-xs text-slate-300 font-semibold mt-1 block uppercase tracking-wider">
-                Listing Image {activeIndex + 1} of {images.length}
+              <span className="text-xs text-slate-300 font-semibold mt-1 block uppercase tracking-wider font-sans">
+                {activeLocale === "en" ? "Listing Image" : "சொத்துப் படம்"} {activeIndex + 1} / {images.length}
               </span>
             </div>
           </div>

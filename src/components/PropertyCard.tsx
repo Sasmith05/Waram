@@ -100,18 +100,11 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           <span>{t("properties.area")}: {translateArea(property.area)}</span>
         </div>
 
-        {/* Status Label & View Details Footer */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4 mt-auto">
-          <div className="flex flex-col text-left min-w-[100px]">
-            <span className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">{t("properties.status")}</span>
-            <span className={`text-sm font-extrabold uppercase tracking-wide ${isSold ? "text-rose-600" : "text-emerald-600"}`}>
-              {isSold ? t("properties.sold") : t("properties.available")}
-            </span>
-          </div>
-          
+        {/* View Details Footer */}
+        <div className="flex justify-end border-t border-slate-100 pt-4 mt-auto">
           <Link
             href={`/properties/${property.id}`}
-            className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-gold-600 group-hover:text-slate-900 py-1.5 px-3.5 border border-gold-500/30 hover:border-slate-900 rounded-lg bg-slate-50/50 hover:bg-slate-50 transition-all active:scale-95 duration-200 cursor-pointer shrink-0"
+            className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-gold-600 group-hover:text-slate-900 py-1.5 px-3.5 border border-gold-500/30 hover:border-slate-900 rounded-lg bg-slate-50/50 hover:bg-slate-50 transition-all active:scale-95 duration-200 cursor-pointer"
           >
             {t("properties.viewDetails")}
             <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />

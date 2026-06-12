@@ -303,7 +303,7 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
             
             {/* Dynamic Gallery Client Wrapper */}
             {property.images && property.images.length > 0 ? (
-              <DetailClientWrapper images={property.images} title={title} />
+              <DetailClientWrapper images={property.images} title={title} locale={locale} />
             ) : (
               <div className="w-full aspect-video bg-slate-50 border border-slate-200/60 rounded-2xl flex flex-col items-center justify-center p-8 text-center shadow-xs">
                 <Building className="h-16 w-16 text-slate-300 mb-2" />
@@ -523,7 +523,7 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
                 className="w-full flex items-center justify-center gap-2 py-3.5 bg-[#25D366] hover:bg-[#1ebd59] text-white font-bold rounded-xl active:scale-[0.98] transition-all text-sm shadow-sm cursor-pointer"
               >
                 <MessageSquare className="h-4.5 w-4.5" />
-                {locale === "en" ? "WhatsApp Inquiry" : "வாட்ஸ்அப் விசாரணை"}
+                {locale === "en" ? "WhatsApp Inquiry" : "சொத்து விபரங்களுக்கு தொடர்பு கொள்ளவும்"}
               </a>
             </div>
 
@@ -531,7 +531,7 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
             <div className="bg-white border border-slate-200/60 rounded-2xl p-6 shadow-sm space-y-6 text-left">
               <div className="border-b border-slate-100 pb-3">
                 <h4 className="font-serif font-bold text-lg text-slate-900">
-                  {locale === "en" ? "Send Property Inquiry" : "சொத்து விசாரணை அனுப்பவும்"}
+                  {locale === "en" ? "Send Property Inquiry" : "சொத்து விபரங்களுக்கு தொடர்பு கொள்ளவும்"}
                 </h4>
                 <p className="text-slate-400 text-xs mt-1">
                   {locale === "en" ? "Submit your details to register interest" : "ஆர்வத்தை பதிவு செய்ய உங்கள் விவரங்களை சமர்ப்பிக்கவும்"}
@@ -539,7 +539,7 @@ export default function PropertyDetailClientView({ id, initialProperty }: Proper
               </div>
 
               {/* Interactive Inquiry Form Wrapper */}
-              <DetailClientWrapper propertyId={property.id} propertyTitle={title} propertyLocation={property.location} isForm={true} />
+              <DetailClientWrapper propertyId={property.id} propertyTitle={title} propertyLocation={property.location} isForm={true} locale={locale} />
             </div>
 
             {/* Legal Advisory Note */}

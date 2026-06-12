@@ -74,11 +74,12 @@ html {
 /* Noto Sans Tamil Typography Overrides for Tamil Language */
 html[lang="ta"] {
   font-family: var(--font-noto-tamil), var(--font-inter), sans-serif;
+  font-size: 105%; /* Increases readability of Tamil script across all layouts */
 }
 
 html[lang="ta"] body {
   font-family: var(--font-noto-tamil), var(--font-inter), sans-serif;
-  line-height: 1.8;
+  line-height: 1.95;
   letter-spacing: 0.01em;
 }
 
@@ -94,7 +95,6 @@ html[lang="ta"] h6 {
 }
 
 html[lang="ta"] p, 
-html[lang="ta"] li, 
 html[lang="ta"] span, 
 html[lang="ta"] button, 
 html[lang="ta"] a, 
@@ -105,10 +105,23 @@ html[lang="ta"] select {
   font-family: var(--font-noto-tamil), var(--font-inter), sans-serif;
 }
 
-/* UI/UX Spacing improvements for Tamil to reduce text crowding */
+/* Spacing and line-height improvements for Tamil body paragraphs */
 html[lang="ta"] p {
+  line-height: 1.95;
+  margin-bottom: 1.25rem;
+}
+
+/* Bullet list spacing enhancements */
+html[lang="ta"] li {
+  font-family: var(--font-noto-tamil), var(--font-inter), sans-serif;
+  margin-bottom: 0.65rem;
   line-height: 1.8;
-  margin-bottom: 1rem;
+}
+
+/* Custom Tamil section spacing adjustments to prevent crowding */
+html[lang="ta"] section {
+  padding-top: 5.5rem;
+  padding-bottom: 5.5rem;
 }
 
 html[lang="ta"] .grid {
@@ -120,4 +133,22 @@ html[lang="ta"] button,
 html[lang="ta"] .btn,
 html[lang="ta"] a[class*="inline-flex"] {
   letter-spacing: 0.03em;
+}
+
+/* Responsive typography adjustments for Tamil on mobile */
+@media (max-width: 640px) {
+  html[lang="ta"] {
+    font-size: 100%; /* Reset scale on small viewports to prevent layout breakages */
+  }
+  html[lang="ta"] body {
+    letter-spacing: 0.005em;
+  }
+  html[lang="ta"] p {
+    line-height: 1.85;
+    margin-bottom: 0.85rem;
+  }
+  html[lang="ta"] section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
 }
