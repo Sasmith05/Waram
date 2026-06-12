@@ -103,7 +103,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               if (link.dropdown) {
@@ -154,7 +154,7 @@ export default function Navbar() {
           </nav>
 
           {/* Consultation Button & Desktop Toggle */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
             <LanguageToggle />
             <a
               href="tel:+918760555585"
@@ -166,7 +166,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Right Container */}
-          <div className="flex items-center gap-3 md:hidden">
+          <div className="flex items-center gap-3 lg:hidden">
             <LanguageToggle />
             {/* Mobile Menu Toggle */}
             <button
@@ -188,7 +188,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-white border-b border-slate-200"
+            className="lg:hidden bg-white border-b border-slate-200"
           >
             <div className="px-4 pt-2 pb-6 space-y-3">
               {navLinks.map((link) => {
