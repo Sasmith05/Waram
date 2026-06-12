@@ -110,6 +110,9 @@ export default function Footer() {
             <Link href="/services" className="hover:text-slate-700 transition-colors duration-200">
               {locale === "en" ? "Services" : "சேவைகள்"}
             </Link>
+            <Link href="/admin/login" className="hover:text-slate-400 hover:underline transition-colors duration-200 text-slate-400/80">
+              {locale === "en" ? "Admin Login" : "நிர்வாகி உள்நுழைவு"}
+            </Link>
           </div>
         </div>
       </div>
