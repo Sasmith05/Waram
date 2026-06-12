@@ -76,13 +76,24 @@ export default function AdminDashboard() {
     <div className="space-y-8 font-sans">
       
       {/* Welcome Header */}
-      <div className="space-y-1.5 text-left">
-        <h1 className="text-3xl font-serif font-bold text-slate-900 tracking-wide">
-          Dashboard Overview
-        </h1>
-        <p className="text-slate-500 text-sm font-semibold">
-          Manage land opportunities, notary requests, and customer enquiries.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/60 pb-5 text-left">
+        <div className="space-y-1.5">
+          <h1 className="text-3xl font-serif font-bold text-slate-900 tracking-wide">
+            Dashboard Overview
+          </h1>
+          <p className="text-slate-500 text-sm font-semibold">
+            Manage land opportunities, notary requests, and customer enquiries.
+          </p>
+        </div>
+        <div className="shrink-0">
+          <Link
+            href="/admin/properties/new"
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white font-bold rounded-xl transition-all shadow-sm active:scale-98 text-sm cursor-pointer"
+          >
+            <Building2 className="h-4 w-4" />
+            Add New Property
+          </Link>
+        </div>
       </div>
 
       {/* Stats Cards Grid */}

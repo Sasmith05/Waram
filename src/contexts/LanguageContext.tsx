@@ -12,16 +12,16 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+  const [locale, setLocaleState] = useState<Locale>("ta");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     // Read preference on client mount
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("waram_language") as Locale;
-      if (saved === "en" || saved === "ta") {
-        setLocaleState(saved);
-      }
+      const initial = saved === "en" || saved === "ta" ? saved : "ta";
+      setLocaleState(initial);
+      document.documentElement.setAttribute("lang", initial);
     }
     setMounted(true);
   }, []);
@@ -30,6 +30,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     setLocaleState(newLocale);
     if (typeof window !== "undefined") {
       localStorage.setItem("waram_language", newLocale);
+      document.documentElement.setAttribute("lang", newLocale);
     }
   };
 

@@ -17,7 +17,7 @@ export interface Property {
   detailedDescription: string;
   googleMapsEmbedUrl?: string;
   googleMapsRedirectUrl?: string;
-  status: 'available' | 'sold';
+  status: 'for_sale' | 'sold';
   surveyNumber?: string;
   pattaStatus?: string;
   roadAccess: string;
@@ -67,7 +67,7 @@ export const propertiesData: Property[] = [
       { name: "Nationalized Banks & ATMs", distance: "1.2 km" }
     ],
     isFeatured: true,
-    status: "available"
+    status: "for_sale"
   },
   {
     id: "agricultural-coconut-grove-rameswaram",
@@ -105,7 +105,7 @@ export const propertiesData: Property[] = [
       { name: "National Highway NH-49 Link", distance: "1.8 km" }
     ],
     isFeatured: true,
-    status: "available"
+    status: "for_sale"
   },
   {
     id: "commercial-nh49-frontage-devipattinam",
@@ -144,7 +144,7 @@ export const propertiesData: Property[] = [
       { name: "State Bank of India & ATM", distance: "0.2 km" }
     ],
     isFeatured: true,
-    status: "available"
+    status: "for_sale"
   },
   {
     id: "sree-nagar-investment-paramakudi",
@@ -181,7 +181,7 @@ export const propertiesData: Property[] = [
       { name: "Sree Nagar Local Market", distance: "2.5 km" }
     ],
     isFeatured: false,
-    status: "available"
+    status: "for_sale"
   },
   {
     id: "vgp-layout-farm-land-rameswaram",
@@ -219,6 +219,6 @@ export const propertiesData: Property[] = [
       { name: "Fish Market & Port", distance: "5.0 km" }
     ],
     isFeatured: true,
-    status: "available"
+    status: "for_sale"
   }
 ];

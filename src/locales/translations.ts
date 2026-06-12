@@ -13,7 +13,8 @@ export const translations = {
       notary_services: "Notary Services",
       land_registration: "Land Registration",
       admin_dashboard: "Admin Dashboard",
-      logout: "Logout"
+      logout: "Logout",
+      events: "Events"
     },
     hero: {
       title: "Trusted Legal Consultation, Notary Public & Land Registration Services",
@@ -26,7 +27,7 @@ export const translations = {
       subtitle: "B.A., B.L. • 20+ Years of Practice",
       practicingSince: "Practice Since",
       expText: "1996 (20+ Years Experience)",
-      chamber: "Office Chamber",
+      chamber: "Office Address",
       chamberName: "WARAM DOCUMENTATION OFFICE",
       viewCredentials: "View Full Credentials & Areas of Expertise",
       pageTitle: "About Advocate S. Rajasekar",
@@ -121,7 +122,7 @@ export const translations = {
       location: "Location",
       area: "Area",
       status: "Status",
-      available: "Available",
+      available: "For Sale",
       sold: "Sold",
       noImages: "No Images Available",
       locationUnavailable: "Location Unavailable",
@@ -142,7 +143,7 @@ export const translations = {
     contact: {
       title: "Contact & Consultation",
       subtitle: "Get in touch with our office for legal advice, notarization scheduling, and land documentation queries.",
-      officeChamber: "Office Chamber Address",
+      officeChamber: "Office Address",
       phone: "Mobile Number",
       email: "Email Address",
       whatsapp: "WhatsApp Chat",
@@ -188,10 +189,11 @@ export const translations = {
       notary_services: "நோட்டரி சேவைகள்",
       land_registration: "நிலப் பதிவு",
       admin_dashboard: "நிர்வாகக் குழு",
-      logout: "வெளியேறு"
+      logout: "வெளியேறு",
+      events: "நிகழ்வுகள்"
     },
     hero: {
-      title: "நம்பகமான சட்ட ஆலோசனை, நோட்டரி பொது & நிலப் பதிவு சேவைகள்",
+      title: "தீர்க்கமான மற்றும் நம்பகமான சட்ட ஆலோசனை, நோட்டரி, நிலப் பதிவு சேவைகள்",
       description: "ராமேஸ்வரத்தில் தொழில்முறை சட்ட ஆலோசனை, நோட்டரி பொது சேவைகள் மற்றும் நிலப் பதிவு உதவி. வழக்கறிஞர் எஸ். ராஜசேகர் தலைமையில், நம்பகமான வழிகாட்டுதல், துல்லியமான ஆவணங்கள் மற்றும் தடையற்ற சட்ட தீர்வுகளை வழங்க அர்ப்பணிக்கப்பட்டுள்ளது.",
       callNow: "இப்போதே அழைக்கவும்",
       whatsapp: "வாட்ஸ்அப் ஆலோசனை"
@@ -264,7 +266,7 @@ export const translations = {
             "சிவில் மற்றும் சொத்து தகராறு ஆலோசனை சேவைகள்",
             "ஆவணங்கள் ஆய்வு மற்றும் சட்ட அபாய மதிப்பீடுகள்",
             "சட்டக் கருத்துக்கள் மற்றும் முறையான அறிவிப்புகளை உருவாக்குதல்",
-            "வழக்கு வழிகள் மற்றும் தகராறு தீர்வு பற்றிய வழிகாட்டுதல்"
+            "சட்ட கருத்துருக்கள் வரைவு"
           ]
         },
         "notary-services": {
@@ -282,8 +284,8 @@ export const translations = {
           description: "சொத்து பதிவு உதவி, நில ஆவணங்கள், பதிவு நடைமுறைகள் மற்றும் தொடர்புடைய சட்ட ஆதரவு.",
           details: [
             "பட்டா மற்றும் சொத்து உரிமை சரிபார்ப்பு அறிக்கைகள்",
-            "கிரைய பத்திரம், தான பத்திரம் மற்றும் விடுதலை பத்திரங்களை வரைவு செய்தல்",
             "முத்திரை தாள் கட்டண கணக்கீடு மற்றும் சார்-பதிவாளர் முன்பதிவு செய்தல்",
+            "கிரைய பத்திரம், தான பத்திரம், உயில் வரைவு மற்றும் விடுதலை பத்திரங்களை வரைவு செய்தல்",
             "பட்டா மாறுதல் மற்றும் வருவாய் ஆவண திருத்த உதவி"
           ]
         }
@@ -296,8 +298,8 @@ export const translations = {
       location: "இடம்",
       area: "பரப்பளவு",
       status: "நிலை",
-      available: "கிடைக்கிறது",
-      sold: "விற்கப்பட்டது",
+      available: "விற்பனைக்கு",
+      sold: "விற்பனையாகிவிட்டது",
       noImages: "படங்கள் இல்லை",
       locationUnavailable: "இட விவரம் இல்லை",
       propertyDetails: "சொத்து விவரங்கள்",

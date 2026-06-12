@@ -28,7 +28,7 @@ const mockStaticProperties = [
     latitude: 9.5444,
     longitude: 78.5914,
     featured: true,
-    status: "available",
+    status: "for_sale",
     survey_number: "245/2B",
     patta_status: "Single Patta Available",
     road_access: "30 Feet Tar Road",
@@ -63,7 +63,7 @@ const mockStaticProperties = [
     latitude: 9.2881,
     longitude: 79.3129,
     featured: true,
-    status: "available",
+    status: "for_sale",
     survey_number: "112/4",
     patta_status: "Joint Patta Available",
     road_access: "20 Feet Dirt Road (Accessible by Tractor/SUV)",
@@ -97,7 +97,7 @@ const mockStaticProperties = [
     latitude: 9.4792,
     longitude: 78.9056,
     featured: true,
-    status: "available",
+    status: "for_sale",
     survey_number: "88/1A",
     patta_status: "Individual Patta Available",
     road_access: "80 Feet NH-49 Highway Frontage",
@@ -131,7 +131,7 @@ const mockStaticProperties = [
     latitude: 9.5512,
     longitude: 78.5789,
     featured: false,
-    status: "available",
+    status: "for_sale",
     survey_number: "310/6C",
     patta_status: "Patta Available",
     road_access: "24 Feet Gravel Road",
@@ -165,7 +165,7 @@ const mockStaticProperties = [
     latitude: 9.2745,
     longitude: 79.2882,
     featured: true,
-    status: "available",
+    status: "for_sale",
     survey_number: "412/1",
     patta_status: "Patta Available",
     road_access: "25 Feet Tar Road inside layout",
@@ -200,6 +200,46 @@ function getLocalMockProperties(): any[] {
 function saveLocalMockProperties(props: any[]) {
   if (typeof window !== "undefined") {
     localStorage.setItem("waram_mock_properties", JSON.stringify(props));
+  }
+}
+
+// 1b. DOCK EVENTS STATIC SEED DATA
+const mockStaticEvents = [
+  {
+    id: "ev-1",
+    title: "Free Legal Aid Camp",
+    description: "Providing legal guidance to the rural community of Rameswaram regarding land records and civil rights.",
+    date: "2026-05-15",
+    images: ["/properties/plot1.png"],
+    created_at: "2026-06-11T12:00:00Z"
+  },
+  {
+    id: "ev-2",
+    title: "Chamber Opening Ceremony",
+    description: "Celebration of the newly refurbished Waram Documentation Office in Rameswaram.",
+    date: "2026-03-10",
+    images: ["/properties/plot2.png"],
+    created_at: "2026-06-11T12:05:00Z"
+  }
+];
+
+function getLocalMockEvents(): any[] {
+  if (typeof window === "undefined") return mockStaticEvents;
+  const stored = localStorage.getItem("waram_mock_events");
+  if (!stored) {
+    localStorage.setItem("waram_mock_events", JSON.stringify(mockStaticEvents));
+    return mockStaticEvents;
+  }
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return mockStaticEvents;
+  }
+}
+
+function saveLocalMockEvents(evs: any[]) {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("waram_mock_events", JSON.stringify(evs));
   }
 }
 
@@ -330,6 +370,16 @@ class MockQueryBuilder {
       return { data: list, error: null };
     }
 
+    if (this.tableName === "events") {
+      let list = [...getLocalMockEvents()];
+      if (this.filterField && this.filterValue !== null) {
+        list = list.filter((e) => String(e[this.filterField]) === String(this.filterValue));
+      }
+      // Sort by date descending
+      list.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      return { data: list, error: null };
+    }
+
     return { data: [], error: null };
   }
 
@@ -393,7 +443,7 @@ class MockQueryBuilder {
           latitude: p.latitude || null,
           longitude: p.longitude || null,
           featured: !!p.featured,
-          status: p.status || "available",
+          status: p.status || "for_sale",
           survey_number: p.survey_number || "",
           patta_status: p.patta_status || "",
           road_access: p.road_access || "20 Feet Access Road",
@@ -408,6 +458,23 @@ class MockQueryBuilder {
 
       saveLocalMockProperties([...newProperties, ...list]);
       return { data: newProperties, error: null };
+    }
+
+    if (this.tableName === "events") {
+      const list = getLocalMockEvents();
+      const newEvents = payloads.map((e) => {
+        const id = e.id || "ev-" + Math.random().toString(36).substr(2, 9);
+        return {
+          id,
+          title: e.title,
+          description: e.description || "",
+          date: e.date,
+          images: e.images || [],
+          created_at: new Date().toISOString()
+        };
+      });
+      saveLocalMockEvents([...newEvents, ...list]);
+      return { data: newEvents, error: null };
     }
 
     return { data: null, error: { message: "Mock insert failed" } };
@@ -432,6 +499,22 @@ class MockQueryBuilder {
         }
       }
     }
+
+    if (this.tableName === "events") {
+      const list = getLocalMockEvents();
+      if (this.filterField === "id" && this.filterValue) {
+        const idx = list.findIndex((e) => String(e.id) === String(this.filterValue));
+        if (idx !== -1) {
+          const updated = {
+            ...list[idx],
+            ...payload
+          };
+          list[idx] = updated;
+          saveLocalMockEvents(list);
+          return { data: [updated], error: null };
+        }
+      }
+    }
     return { data: null, error: { message: "Mock update failed" } };
   }
 
@@ -441,6 +524,15 @@ class MockQueryBuilder {
       if (this.filterField === "id" && this.filterValue) {
         const filtered = list.filter((p) => String(p.id) !== String(this.filterValue));
         saveLocalMockProperties(filtered);
+        return { data: [{ id: this.filterValue }], error: null };
+      }
+    }
+
+    if (this.tableName === "events") {
+      const list = getLocalMockEvents();
+      if (this.filterField === "id" && this.filterValue) {
+        const filtered = list.filter((e) => String(e.id) !== String(this.filterValue));
+        saveLocalMockEvents(filtered);
         return { data: [{ id: this.filterValue }], error: null };
       }
     }
@@ -475,18 +567,18 @@ const mockAuth = {
     if (typeof window === "undefined") return { data: { session: null }, error: null };
     const activeSession = localStorage.getItem("waram_mock_session");
     if (activeSession === "true") {
-      return { data: { session: { user: { email: "admin@waram.com", id: "admin-uid" } } }, error: null };
+      return { data: { session: { user: { email: "notaryrajasekar@gmail.com", id: "admin-uid" } } }, error: null };
     }
     return { data: { session: null }, error: null };
   },
   signInWithPassword: async ({ email, password }: any) => {
-    if (email === "admin@waram.com" && password === "admin123") {
+    if (email === "notaryrajasekar@gmail.com" && password === "notary@waram") {
       if (typeof window !== "undefined") {
         localStorage.setItem("waram_mock_session", "true");
       }
       return { data: { session: { user: { email, id: "admin-uid" } } }, error: null };
     }
-    return { data: null, error: { message: "Invalid email or password. Use: admin@waram.com / admin123 for local mock mode." } };
+    return { data: null, error: { message: "Invalid email or password." } };
   },
   signOut: async () => {
     if (typeof window !== "undefined") {

@@ -70,3 +70,54 @@ html {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* Noto Sans Tamil Typography Overrides for Tamil Language */
+html[lang="ta"] {
+  font-family: var(--font-noto-tamil), var(--font-inter), sans-serif;
+}
+
+html[lang="ta"] body {
+  font-family: var(--font-noto-tamil), var(--font-inter), sans-serif;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+}
+
+html[lang="ta"] h1,
+html[lang="ta"] h2,
+html[lang="ta"] h3,
+html[lang="ta"] h4,
+html[lang="ta"] h5,
+html[lang="ta"] h6 {
+  font-family: var(--font-noto-tamil), var(--font-playfair), serif;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+}
+
+html[lang="ta"] p, 
+html[lang="ta"] li, 
+html[lang="ta"] span, 
+html[lang="ta"] button, 
+html[lang="ta"] a, 
+html[lang="ta"] label, 
+html[lang="ta"] input, 
+html[lang="ta"] textarea, 
+html[lang="ta"] select {
+  font-family: var(--font-noto-tamil), var(--font-inter), sans-serif;
+}
+
+/* UI/UX Spacing improvements for Tamil to reduce text crowding */
+html[lang="ta"] p {
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+html[lang="ta"] .grid {
+  gap: 2rem;
+}
+
+/* Larger button styling in Tamil */
+html[lang="ta"] button,
+html[lang="ta"] .btn,
+html[lang="ta"] a[class*="inline-flex"] {
+  letter-spacing: 0.03em;
+}

@@ -71,11 +71,6 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           </div>
         )}
         
-        {/* Category Badge */}
-        <span className="absolute top-4 left-4 bg-slate-900/90 backdrop-blur-xs text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-white/10">
-          {translateCategory(property.categoryDisplay)}
-        </span>
-
         {/* Status Badge */}
         <span className={`absolute top-4 right-4 backdrop-blur-xs text-white text-[10px] sm:text-xs font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-lg border shadow-xs ${
           isSold
@@ -99,16 +94,10 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           {description}
         </p>
 
-        {/* Specifications Grid */}
-        <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-4 mb-4 text-xs text-slate-600 font-semibold">
-          <div className="flex items-center gap-1.5 text-left min-w-0">
-            <MapPin className="h-4 w-4 text-gold-500 shrink-0" />
-            <span className="truncate">{translateLocation(property.location)}</span>
-          </div>
-          <div className="flex items-center gap-1.5 justify-end">
-            <Maximize2 className="h-4 w-4 text-gold-500 shrink-0" />
-            <span>{translateArea(property.area)}</span>
-          </div>
+        {/* Specifications Grid - Area only */}
+        <div className="flex items-center gap-1.5 border-t border-slate-100 pt-4 mb-4 text-xs text-slate-600 font-semibold text-left">
+          <Maximize2 className="h-4 w-4 text-gold-500 shrink-0" />
+          <span>{t("properties.area")}: {translateArea(property.area)}</span>
         </div>
 
         {/* Status Label & View Details Footer */}

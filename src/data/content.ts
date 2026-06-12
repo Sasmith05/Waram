@@ -106,9 +106,9 @@ export const contactInfo: ContactInfo = {
   phone: "+918760555585",
   phoneDisplay: "+91 87605 55585",
   email: "notaryrajasekar@gmail.com",
-  address: "12/8A RAMAR THEERTHAM NORTH, RAMESWARAM, TAMIL NADU 623526, INDIA",
-  googleMapEmbedUrl: "https://maps.google.com/maps?q=12/8A+Ramar+Theertham+North,+Rameswaram,+Tamil+Nadu+623526&t=&z=16&ie=UTF8&iwloc=&output=embed",
-  googleMapShareUrl: "https://share.google/p1n59OQ0cIwjkIQw7",
+  address: "78P5+QGW, Rameswaram, Tamil Nadu 623526",
+  googleMapEmbedUrl: "https://maps.google.com/maps?q=78P5%2BQGW%2C+Rameswaram%2C+Tamil+Nadu+623526&t=&z=16&ie=UTF8&iwloc=&output=embed",
+  googleMapShareUrl: "https://www.google.com/maps/search/?api=1&query=78P5%2BQGW%2C+Rameswaram%2C+Tamil+Nadu+623526",
   whatsappNumber: "918760555585",
   whatsappMessage: "Hello, I would like to enquire about your legal consultation services."
 };

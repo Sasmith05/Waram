@@ -22,6 +22,7 @@ const navLinks = [
     ]
   },
   { key: "nav.properties", href: "/properties" },
+  { key: "nav.events", href: "/events" },
   { key: "nav.contact", href: "/contact" }
 ];
 
@@ -96,7 +97,7 @@ export default function Navbar() {
                 {locale === "en" ? "RAJASEKAR" : "ராஜசேகர்"}
               </span>
               <span className="block text-[11px] md:text-xs uppercase text-gold-600 font-bold tracking-widest leading-none mt-1">
-                {locale === "en" ? "ADVOCATE & NOTARY PUBLIC" : "வழக்கறிஞர் & நோட்டரி பொது"}
+                {locale === "en" ? "ADVOCATE & NOTARY PUBLIC" : "வழக்கறிஞர் & நோட்டரி"}
               </span>
             </div>
           </Link>

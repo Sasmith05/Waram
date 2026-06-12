@@ -3,6 +3,8 @@ import { propertiesData } from "@/data/properties";
 import { supabase } from "@/lib/supabase";
 import PropertyDetailClientView from "./PropertyDetailClientView";
 
+export const dynamic = "force-dynamic";
+
 const categories = [
   { value: "all", label: "All Properties" },
   { value: "residential-plots", label: "Residential Plots" },

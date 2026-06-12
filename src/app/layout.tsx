@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, Inter, Noto_Sans_Tamil } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -16,6 +16,13 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
+});
+
+const notoTamil = Noto_Sans_Tamil({
+  variable: "--font-noto-tamil",
+  subsets: ["tamil"],
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -35,7 +42,7 @@ export const metadata: Metadata = {
     title: "Advocate S Rajasekar | Advocate & Notary Public",
     description: "Professional legal consultation, notary public services, and land registration at Waram Documentation Office.",
     type: "website",
-    locale: "en_IN",
+    locale: "ta_IN",
   },
 };
 
@@ -46,8 +53,8 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${playfair.variable} ${inter.variable} h-full antialiased scroll-smooth`}
+      lang="ta"
+      className={`${playfair.variable} ${inter.variable} ${notoTamil.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col font-sans bg-white text-slate-900 select-none selection:bg-gold-500 selection:text-white">
         <LanguageProvider>

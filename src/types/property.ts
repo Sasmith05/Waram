@@ -18,7 +18,7 @@ export interface Property {
   latitude?: number;
   longitude?: number;
   featured: boolean;
-  status: 'available' | 'sold';
+  status: 'for_sale' | 'sold';
   survey_number?: string;
   patta_status?: string;
   road_access?: string;

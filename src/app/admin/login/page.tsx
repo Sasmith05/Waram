@@ -132,12 +132,6 @@ export default function AdminLogin() {
           </button>
         </form>
 
-        {/* Note on local authentication credentials fallback */}
-        <div className="text-center bg-slate-50 border border-slate-200/60 p-4 rounded-xl text-[10px] text-slate-400 leading-relaxed font-semibold">
-          <span className="block text-slate-600 uppercase font-bold tracking-wider mb-0.5">Local Mock Mode</span>
-          Use email: <strong className="text-slate-700">admin@waram.com</strong> and password: <strong className="text-slate-700">admin123</strong> to test locally without live Supabase env variables.
-        </div>
-
       </div>
     </div>
   );

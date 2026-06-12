@@ -286,7 +286,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <span className="text-xs uppercase tracking-widest text-gold-600 font-bold font-sans">
-              {locale === "en" ? "Contact Chamber" : "தொடர்பு கொள்ள"}
+              {locale === "en" ? "Contact Office" : "தொடர்பு கொள்ள"}
             </span>
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900">
               {t("contact.title")}

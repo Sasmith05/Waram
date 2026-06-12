@@ -71,7 +71,7 @@ export default function AdminPropertiesList() {
     }
   };
 
-  const handleStatusChange = async (id: string, newStatus: "available" | "sold") => {
+  const handleStatusChange = async (id: string, newStatus: "for_sale" | "sold") => {
     try {
       const { error } = await supabase
         .from("properties")
@@ -147,8 +147,8 @@ export default function AdminPropertiesList() {
                   <th className="px-6 py-4">Image</th>
                   <th className="px-6 py-4">Details</th>
                   <th className="px-6 py-4">Category</th>
-                  <th className="px-6 py-4 text-center">Status</th>
                   <th className="px-6 py-4 text-right">Price</th>
+                  <th className="px-6 py-4 text-center">Status</th>
                   <th className="px-6 py-4 text-center">Featured</th>
                   <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
@@ -194,11 +194,11 @@ export default function AdminPropertiesList() {
                     {/* Status Dropdown Selection */}
                     <td className="px-6 py-4 text-center whitespace-nowrap">
                       <select
-                        value={prop.status || "available"}
+                        value={prop.status || "for_sale"}
                         onChange={(e) => handleStatusChange(prop.id, e.target.value as any)}
                         className="px-2.5 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 cursor-pointer transition-all shadow-2xs"
                       >
-                        <option value="available">🟢 Available</option>
+                        <option value="for_sale">🟢 For Sale</option>
                         <option value="sold">🔴 Sold</option>
                       </select>
                     </td>

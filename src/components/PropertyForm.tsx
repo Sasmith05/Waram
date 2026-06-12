@@ -62,7 +62,7 @@ export default function PropertyForm({ initialData, isEdit = false }: PropertyFo
   const [latitude, setLatitude] = useState<number | string>(initialData?.latitude || "");
   const [longitude, setLongitude] = useState<number | string>(initialData?.longitude || "");
   const [featured, setFeatured] = useState(initialData?.featured || false);
-  const [status, setStatus] = useState<"available" | "sold">(initialData?.status || "available");
+  const [status, setStatus] = useState<"for_sale" | "sold">(initialData?.status || "for_sale");
   
   const [surveyNumber, setSurveyNumber] = useState(initialData?.survey_number || "");
   const [pattaStatus, setPattaStatus] = useState(initialData?.patta_status || "");
@@ -345,7 +345,7 @@ export default function PropertyForm({ initialData, isEdit = false }: PropertyFo
                   onChange={(e) => setStatus(e.target.value as any)}
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 text-sm font-semibold transition-all cursor-pointer shadow-2xs"
                 >
-                  <option value="available">🟢 Available</option>
+                  <option value="for_sale">🟢 For Sale</option>
                   <option value="sold">🔴 Sold</option>
                 </select>
               </div>

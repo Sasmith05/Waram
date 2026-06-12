@@ -37,7 +37,7 @@ export default function Footer() {
                   {locale === "en" ? "RAJASEKAR" : "ராஜசேகர்"}
                 </span>
                 <span className="block text-[9px] uppercase text-gold-600 font-bold tracking-widest leading-none mt-0.5">
-                  {locale === "en" ? "ADVOCATE & NOTARY PUBLIC" : "வழக்கறிஞர் & நோட்டரி பொது"}
+                  {locale === "en" ? "ADVOCATE & NOTARY PUBLIC" : "வழக்கறிஞர் & நோட்டரி"}
                 </span>
               </div>
             </Link>

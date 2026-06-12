@@ -10,7 +10,8 @@ import {
   LogOut, 
   Menu, 
   X,
-  Compass
+  Compass,
+  Calendar
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
@@ -78,6 +79,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const navItems = [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     { name: "Properties", href: "/admin/properties", icon: Building2 },
+    { name: "Events", href: "/admin/events", icon: Calendar },
     { name: "Enquiries", href: "/admin/enquiries", icon: Inbox }
   ];
 
