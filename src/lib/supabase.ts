@@ -204,7 +204,7 @@ function saveLocalMockProperties(props: any[]) {
 }
 
 // 1b. DOCK EVENTS STATIC SEED DATA
-const mockStaticEvents = [
+export const mockStaticEvents = [
   {
     id: "ev-1",
     title: "Free Legal Aid Camp",

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Calendar, Plus, Search, Trash2, Edit2, ImageIcon } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { supabase, mockStaticEvents } from "@/lib/supabase";
 
 interface EventItem {
   id: string;
@@ -14,7 +14,7 @@ interface EventItem {
 }
 
 export default function AdminEventsPage() {
-  const [events, setEvents] = useState<EventItem[]>([]);
+  const [events, setEvents] = useState<EventItem[]>(mockStaticEvents);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -26,8 +26,21 @@ export default function AdminEventsPage() {
         .select("*")
         .order("date", { ascending: false });
 
-      if (error) throw error;
-      setEvents(data || []);
+      if (error) {
+        console.error("Failed to load events from Supabase, checking local storage:", error);
+        if (typeof window !== "undefined") {
+          const stored = localStorage.getItem("waram_mock_events");
+          if (stored) {
+            try {
+              setEvents(JSON.parse(stored));
+            } catch {
+              // ignore
+            }
+          }
+        }
+      } else if (data && data.length > 0) {
+        setEvents(data);
+      }
     } catch (err: any) {
       console.error("Failed to load events", err);
     } finally {
