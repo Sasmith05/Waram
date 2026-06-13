@@ -253,6 +253,9 @@ class MockQueryBuilder {
   private orderByField: string = "";
   private orderAscending: boolean = true;
   private limitCount: number = 0;
+  private insertPayload: any = null;
+  private updatePayload: any = null;
+  private isDelete: boolean = false;
 
   constructor(tableName: string) {
     this.tableName = tableName;
@@ -293,16 +296,204 @@ class MockQueryBuilder {
     onfulfilled(res);
   }
 
+  insert(payload: any | any[]) {
+    this.insertPayload = payload;
+    return this;
+  }
+
+  update(payload: any) {
+    this.updatePayload = payload;
+    return this;
+  }
+
+  delete() {
+    this.isDelete = true;
+    return this;
+  }
+
   private async thenResolve(): Promise<{ data: any; error: any }> {
+    // 1. Process Insert
+    if (this.insertPayload !== null) {
+      const payloads = Array.isArray(this.insertPayload) ? this.insertPayload : [this.insertPayload];
+
+      if (this.tableName === "enquiries") {
+        if (typeof window !== "undefined") {
+          const stored = localStorage.getItem("waram_mock_enquiries");
+          let list: any[] = [];
+          if (stored) {
+            try {
+              list = JSON.parse(stored);
+            } catch {
+              list = [];
+            }
+          }
+
+          const newEnqs = payloads.map((p) => {
+            const allProps = getLocalMockProperties();
+            const property = allProps.find((pr) => pr.id === p.property_id);
+            return {
+              id: p.id || Math.random().toString(36).substr(2, 9),
+              property_id: p.property_id,
+              property_title: property ? property.title : "Unknown Property",
+              name: p.name,
+              phone: p.phone,
+              email: p.email,
+              message: p.message,
+              created_at: p.created_at || new Date().toISOString()
+            };
+          });
+
+          const updated = [...newEnqs, ...list];
+          localStorage.setItem("waram_mock_enquiries", JSON.stringify(updated));
+          return { data: newEnqs, error: null };
+        }
+      }
+
+      if (this.tableName === "properties") {
+        const list = getLocalMockProperties();
+        const newProperties = payloads.map((p) => {
+          const id = p.id || Math.random().toString(36).substr(2, 9) + "-" + Math.random().toString(36).substr(2, 9);
+          return {
+            id,
+            slug: p.slug || p.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+            title: p.title,
+            title_en: p.title_en || p.title,
+            title_ta: p.title_ta || p.title,
+            property_type: p.property_type,
+            location: p.location || "",
+            area: p.area,
+            price: Number(p.price),
+            price_display: `₹${Number(p.price).toLocaleString("en-IN")}`,
+            description: p.description,
+            description_en: p.description_en || p.description,
+            description_ta: p.description_ta || p.description,
+            detailed_description: p.detailed_description,
+            map_url: p.map_url || "",
+            latitude: p.latitude || null,
+            longitude: p.longitude || null,
+            featured: !!p.featured,
+            status: p.status || "for_sale",
+            survey_number: p.survey_number || "",
+            patta_status: p.patta_status || "",
+            road_access: p.road_access || "20 Feet Access Road",
+            water_availability: p.water_availability || "Ground Water Available",
+            electricity_availability: p.electricity_availability || "Grid Power Connection Nearby",
+            features: p.features || [],
+            nearby_facilities: p.nearby_facilities || [],
+            created_at: new Date().toISOString(),
+            images: p.images || []
+          };
+        });
+
+        saveLocalMockProperties([...newProperties, ...list]);
+        return { data: newProperties, error: null };
+      }
+
+      if (this.tableName === "events") {
+        const list = getLocalMockEvents();
+        const newEvents = payloads.map((e) => {
+          const id = e.id || "ev-" + Math.random().toString(36).substr(2, 9);
+          return {
+            id,
+            title: e.title,
+            description: e.description || "",
+            date: e.date,
+            images: e.images || [],
+            created_at: new Date().toISOString()
+          };
+        });
+        saveLocalMockEvents([...newEvents, ...list]);
+        return { data: newEvents, error: null };
+      }
+
+      return { data: null, error: { message: "Mock insert failed" } };
+    }
+
+    // 2. Process Update
+    if (this.updatePayload !== null) {
+      if (this.tableName === "properties") {
+        const list = getLocalMockProperties();
+        if (this.filterField === "id" && this.filterValue) {
+          const idx = list.findIndex((p) => String(p.id) === String(this.filterValue));
+          if (idx !== -1) {
+            const updated = {
+              ...list[idx],
+              ...this.updatePayload,
+              price_display: this.updatePayload.price ? `₹${Number(this.updatePayload.price).toLocaleString("en-IN")}` : list[idx].price_display
+            };
+            list[idx] = updated;
+            saveLocalMockProperties(list);
+            return { data: [updated], error: null };
+          }
+        }
+      }
+
+      if (this.tableName === "events") {
+        const list = getLocalMockEvents();
+        if (this.filterField === "id" && this.filterValue) {
+          const idx = list.findIndex((e) => String(e.id) === String(this.filterValue));
+          if (idx !== -1) {
+            const updated = {
+              ...list[idx],
+              ...this.updatePayload
+            };
+            list[idx] = updated;
+            saveLocalMockEvents(list);
+            return { data: [updated], error: null };
+          }
+        }
+      }
+      return { data: null, error: { message: "Mock update failed" } };
+    }
+
+    // 3. Process Delete
+    if (this.isDelete) {
+      if (this.tableName === "properties") {
+        const list = getLocalMockProperties();
+        if (this.filterField === "id" && this.filterValue) {
+          const filtered = list.filter((p) => String(p.id) !== String(this.filterValue));
+          saveLocalMockProperties(filtered);
+          return { data: [{ id: this.filterValue }], error: null };
+        }
+      }
+
+      if (this.tableName === "events") {
+        const list = getLocalMockEvents();
+        if (this.filterField === "id" && this.filterValue) {
+          const filtered = list.filter((e) => String(e.id) !== String(this.filterValue));
+          saveLocalMockEvents(filtered);
+          return { data: [{ id: this.filterValue }], error: null };
+        }
+      }
+
+      if (this.tableName === "enquiries") {
+        if (typeof window !== "undefined") {
+          const stored = localStorage.getItem("waram_mock_enquiries");
+          if (stored) {
+            try {
+              const list = JSON.parse(stored);
+              if (this.filterField === "id" && this.filterValue) {
+                const filtered = list.filter((e: any) => String(e.id) !== String(this.filterValue));
+                localStorage.setItem("waram_mock_enquiries", JSON.stringify(filtered));
+                return { data: [{ id: this.filterValue }], error: null };
+              }
+            } catch {
+              // ignore
+            }
+          }
+        }
+      }
+      return { data: null, error: { message: "Mock delete failed" } };
+    }
+
+    // 4. Process Select (Default)
     if (this.tableName === "properties") {
       let list = [...getLocalMockProperties()];
 
-      // Filter by slug or ID
       if (this.filterField && this.filterValue !== null) {
         list = list.filter((p) => String(p[this.filterField]) === String(this.filterValue));
       }
 
-      // Order
       if (this.orderByField) {
         list.sort((a, b) => {
           const valA = a[this.orderByField];
@@ -316,7 +507,6 @@ class MockQueryBuilder {
         });
       }
 
-      // Limit
       if (this.limitCount > 0) {
         list = list.slice(0, this.limitCount);
       }
@@ -325,7 +515,6 @@ class MockQueryBuilder {
     }
 
     if (this.tableName === "property_images") {
-      // Mock images join result
       const allProps = getLocalMockProperties();
       const images: any[] = [];
       allProps.forEach((p) => {
@@ -360,7 +549,6 @@ class MockQueryBuilder {
         }
       }
 
-      // Order by date desc
       list.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
       if (this.filterField && this.filterValue !== null) {
@@ -375,187 +563,11 @@ class MockQueryBuilder {
       if (this.filterField && this.filterValue !== null) {
         list = list.filter((e) => String(e[this.filterField]) === String(this.filterValue));
       }
-      // Sort by date descending
       list.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
       return { data: list, error: null };
     }
 
     return { data: [], error: null };
-  }
-
-  // Database write actions
-  async insert(payload: any | any[]) {
-    const payloads = Array.isArray(payload) ? payload : [payload];
-
-    if (this.tableName === "enquiries") {
-      if (typeof window !== "undefined") {
-        const stored = localStorage.getItem("waram_mock_enquiries");
-        let list: any[] = [];
-        if (stored) {
-          try {
-            list = JSON.parse(stored);
-          } catch {
-            list = [];
-          }
-        }
-
-        const newEnqs = payloads.map((p) => {
-          const allProps = getLocalMockProperties();
-          const property = allProps.find((pr) => pr.id === p.property_id);
-          return {
-            id: p.id || Math.random().toString(36).substr(2, 9),
-            property_id: p.property_id,
-            property_title: property ? property.title : "Unknown Property",
-            name: p.name,
-            phone: p.phone,
-            email: p.email,
-            message: p.message,
-            created_at: p.created_at || new Date().toISOString()
-          };
-        });
-
-        const updated = [...newEnqs, ...list];
-        localStorage.setItem("waram_mock_enquiries", JSON.stringify(updated));
-        return { data: newEnqs, error: null };
-      }
-    }
-
-    if (this.tableName === "properties") {
-      const list = getLocalMockProperties();
-      const newProperties = payloads.map((p) => {
-        const id = p.id || Math.random().toString(36).substr(2, 9) + "-" + Math.random().toString(36).substr(2, 9);
-        return {
-          id,
-          slug: p.slug || p.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
-          title: p.title,
-          title_en: p.title_en || p.title,
-          title_ta: p.title_ta || p.title,
-          property_type: p.property_type,
-          location: p.location || "",
-          area: p.area,
-          price: Number(p.price),
-          price_display: `₹${Number(p.price).toLocaleString("en-IN")}`,
-          description: p.description,
-          description_en: p.description_en || p.description,
-          description_ta: p.description_ta || p.description,
-          detailed_description: p.detailed_description,
-          map_url: p.map_url || "",
-          latitude: p.latitude || null,
-          longitude: p.longitude || null,
-          featured: !!p.featured,
-          status: p.status || "for_sale",
-          survey_number: p.survey_number || "",
-          patta_status: p.patta_status || "",
-          road_access: p.road_access || "20 Feet Access Road",
-          water_availability: p.water_availability || "Ground Water Available",
-          electricity_availability: p.electricity_availability || "Grid Power Connection Nearby",
-          features: p.features || [],
-          nearby_facilities: p.nearby_facilities || [],
-          created_at: new Date().toISOString(),
-          images: p.images || []
-        };
-      });
-
-      saveLocalMockProperties([...newProperties, ...list]);
-      return { data: newProperties, error: null };
-    }
-
-    if (this.tableName === "events") {
-      const list = getLocalMockEvents();
-      const newEvents = payloads.map((e) => {
-        const id = e.id || "ev-" + Math.random().toString(36).substr(2, 9);
-        return {
-          id,
-          title: e.title,
-          description: e.description || "",
-          date: e.date,
-          images: e.images || [],
-          created_at: new Date().toISOString()
-        };
-      });
-      saveLocalMockEvents([...newEvents, ...list]);
-      return { data: newEvents, error: null };
-    }
-
-    return { data: null, error: { message: "Mock insert failed" } };
-  }
-
-  async update(payload: any) {
-    if (this.tableName === "properties") {
-      const list = getLocalMockProperties();
-      // Look for current filter constraints (e.g. eq('id', id))
-      if (this.filterField === "id" && this.filterValue) {
-        const idx = list.findIndex((p) => String(p.id) === String(this.filterValue));
-        if (idx !== -1) {
-          const updated = {
-            ...list[idx],
-            ...payload,
-            // Format price_display if price is changing
-            price_display: payload.price ? `₹${Number(payload.price).toLocaleString("en-IN")}` : list[idx].price_display
-          };
-          list[idx] = updated;
-          saveLocalMockProperties(list);
-          return { data: [updated], error: null };
-        }
-      }
-    }
-
-    if (this.tableName === "events") {
-      const list = getLocalMockEvents();
-      if (this.filterField === "id" && this.filterValue) {
-        const idx = list.findIndex((e) => String(e.id) === String(this.filterValue));
-        if (idx !== -1) {
-          const updated = {
-            ...list[idx],
-            ...payload
-          };
-          list[idx] = updated;
-          saveLocalMockEvents(list);
-          return { data: [updated], error: null };
-        }
-      }
-    }
-    return { data: null, error: { message: "Mock update failed" } };
-  }
-
-  async delete() {
-    if (this.tableName === "properties") {
-      const list = getLocalMockProperties();
-      if (this.filterField === "id" && this.filterValue) {
-        const filtered = list.filter((p) => String(p.id) !== String(this.filterValue));
-        saveLocalMockProperties(filtered);
-        return { data: [{ id: this.filterValue }], error: null };
-      }
-    }
-
-    if (this.tableName === "events") {
-      const list = getLocalMockEvents();
-      if (this.filterField === "id" && this.filterValue) {
-        const filtered = list.filter((e) => String(e.id) !== String(this.filterValue));
-        saveLocalMockEvents(filtered);
-        return { data: [{ id: this.filterValue }], error: null };
-      }
-    }
-
-    if (this.tableName === "enquiries") {
-      if (typeof window !== "undefined") {
-        const stored = localStorage.getItem("waram_mock_enquiries");
-        if (stored) {
-          try {
-            const list = JSON.parse(stored);
-            if (this.filterField === "id" && this.filterValue) {
-              const filtered = list.filter((e: any) => String(e.id) !== String(this.filterValue));
-              localStorage.setItem("waram_mock_enquiries", JSON.stringify(filtered));
-              return { data: [{ id: this.filterValue }], error: null };
-            }
-          } catch {
-            // ignore
-          }
-        }
-      }
-    }
-
-    return { data: null, error: { message: "Mock delete failed" } };
   }
 }
 
