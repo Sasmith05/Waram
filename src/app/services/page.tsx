@@ -34,7 +34,7 @@ export default function Services() {
               </>
             ) : (
               <>
-                தொழில்முறை சட்ட <span className="gold-text-gradient">சேவைகள் & தீர்வுகள்</span>
+                புலமைமிகு நுட்பமான சட்ட <span className="gold-text-gradient">சேவைகள் & தீர்வுகள்</span>
               </>
             )}
           </h1>
