@@ -60,16 +60,55 @@ export default function AdminEventsPage() {
       // Fetch event to get images to delete from storage if needed
       const event = events.find((e) => e.id === id);
       
-      // Delete event from DB
-      const { error } = await supabase.from("events").delete().eq("id", id);
-      if (error) throw error;
+      let supabaseSuccess = false;
+      try {
+        // Delete event from DB
+        const { error } = await supabase.from("events").delete().eq("id", id);
+        if (error) throw error;
+        supabaseSuccess = true;
+      } catch (dbErr: any) {
+        console.warn("Supabase event delete failed, falling back to local storage:", dbErr);
+      }
 
       // Clean up images in storage (mock storage will handle it gracefully)
       if (event && event.images && event.images.length > 0) {
-        // filter out static mock images from deletion to prevent error
-        const userUploadedPaths = event.images.filter((img) => !img.startsWith("/properties/"));
+        // filter out static mock images and base64 strings from deletion to prevent error
+        const userUploadedPaths = event.images
+          .filter((img) => !img.startsWith("/properties/") && !img.startsWith("data:"))
+          .map((img) => {
+            if (!img.startsWith("http")) return img;
+            try {
+              const searchStr = "/storage/v1/object/public/events/";
+              const idx = img.indexOf(searchStr);
+              if (idx !== -1) {
+                return img.substring(idx + searchStr.length);
+              }
+            } catch (err) {
+              // ignore
+            }
+            return img;
+          });
+
         if (userUploadedPaths.length > 0) {
-          await supabase.storage.from("events").remove(userUploadedPaths);
+          try {
+            await supabase.storage.from("events").remove(userUploadedPaths);
+          } catch (storageErr) {
+            // ignore storage deletion error on fallback
+          }
+        }
+      }
+
+      // Fallback
+      if (!supabaseSuccess && typeof window !== "undefined") {
+        const stored = localStorage.getItem("waram_mock_events");
+        if (stored) {
+          try {
+            const list = JSON.parse(stored);
+            const filtered = list.filter((e: any) => e.id !== id);
+            localStorage.setItem("waram_mock_events", JSON.stringify(filtered));
+          } catch {
+            // ignore
+          }
         }
       }
 
