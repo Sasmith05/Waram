@@ -231,43 +231,12 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Services Grid (Exactly 3 Cards) / Consolidated Tamil List */}
-          {locale === "ta" ? (
-            <div className="max-w-3xl mx-auto bg-white border border-slate-200/60 rounded-3xl p-6 sm:p-10 shadow-sm gold-glow text-left space-y-6">
-              <h3 className="text-2xl font-serif font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-gold-500" />
-                நாங்கள் கையாளும் பகுதிகள்:
-              </h3>
-              <ul className="space-y-4 font-sans text-slate-700">
-                <li className="flex gap-3.5 items-start text-sm sm:text-base">
-                  <ArrowRight className="h-5 w-5 text-gold-500 shrink-0 mt-0.5" />
-                  <span className="text-slate-700 font-semibold leading-relaxed">பட்டா மற்றும் சொத்து உரிமை சரிபார்ப்பு அறிக்கைகள்</span>
-                </li>
-                <li className="flex gap-3.5 items-start text-sm sm:text-base">
-                  <ArrowRight className="h-5 w-5 text-gold-500 shrink-0 mt-0.5" />
-                  <span className="text-slate-700 font-semibold leading-relaxed">முத்திரை தாள் கட்டண கணக்கீடு மற்றும் சார்-பதிவாளர் முன்பதிவு செய்தல்</span>
-                </li>
-                <li className="flex gap-3.5 items-start text-sm sm:text-base">
-                  <ArrowRight className="h-5 w-5 text-gold-500 shrink-0 mt-0.5" />
-                  <span className="text-slate-700 font-semibold leading-relaxed">கிரைய பத்திரம், தான பத்திரம், உயில் வரைவு மற்றும் விடுதலை பத்திரங்களை வரைவு செய்தல்</span>
-                </li>
-                <li className="flex gap-3.5 items-start text-sm sm:text-base">
-                  <ArrowRight className="h-5 w-5 text-gold-500 shrink-0 mt-0.5" />
-                  <span className="text-slate-700 font-semibold leading-relaxed">பட்டா மாறுதல் மற்றும் வருவாய் ஆவண திருத்த உதவி</span>
-                </li>
-                <li className="flex gap-3.5 items-start text-sm sm:text-base">
-                  <ArrowRight className="h-5 w-5 text-gold-500 shrink-0 mt-0.5" />
-                  <span className="text-slate-700 font-semibold leading-relaxed">சட்ட கருத்துருக்கள் வரைவு</span>
-                </li>
-              </ul>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {servicesData.map((service, index) => (
-                <ServiceCard key={service.id} service={service} index={index} />
-              ))}
-            </div>
-          )}
+          {/* Services Grid (Exactly 3 Cards) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {servicesData.map((service, index) => (
+              <ServiceCard key={service.id} service={service} index={index} />
+            ))}
+          </div>
 
         </div>
       </section>

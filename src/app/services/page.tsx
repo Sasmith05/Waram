@@ -46,106 +46,67 @@ export default function Services() {
 
         {/* Detailed Service Segment Grid */}
         <div className="space-y-12">
-          {locale === "ta" ? (
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6 }}
-              className="bg-slate-50 border border-slate-200/60 rounded-3xl p-6 sm:p-10 transition-all duration-300 shadow-sm gold-glow"
-            >
-              <div className="max-w-3xl mx-auto space-y-6 text-left">
-                <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-wide border-b border-slate-200 pb-4 flex items-center gap-2">
-                  <Icons.Scale className="h-7 w-7 text-gold-600" />
-                  நாங்கள் கையாளும் பகுதிகள்:
-                </h2>
-                <ul className="space-y-4 font-sans text-slate-700">
-                  <li className="flex gap-3.5 items-start text-sm sm:text-base">
-                    <Icons.CheckCircle2 className="h-5 w-5 text-gold-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 font-semibold leading-relaxed">பட்டா மற்றும் சொத்து உரிமை சரிபார்ப்பு அறிக்கைகள்</span>
-                  </li>
-                  <li className="flex gap-3.5 items-start text-sm sm:text-base">
-                    <Icons.CheckCircle2 className="h-5 w-5 text-gold-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 font-semibold leading-relaxed">முத்திரை தாள் கட்டண கணக்கீடு மற்றும் சார்-பதிவாளர் முன்பதிவு செய்தல்</span>
-                  </li>
-                  <li className="flex gap-3.5 items-start text-sm sm:text-base">
-                    <Icons.CheckCircle2 className="h-5 w-5 text-gold-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 font-semibold leading-relaxed">கிரைய பத்திரம், தான பத்திரம், உயில் வரைவு மற்றும் விடுதலை பத்திரங்களை வரைவு செய்தல்</span>
-                  </li>
-                  <li className="flex gap-3.5 items-start text-sm sm:text-base">
-                    <Icons.CheckCircle2 className="h-5 w-5 text-gold-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 font-semibold leading-relaxed">பட்டா மாறுதல் மற்றும் வருவாய் ஆவண திருத்த உதவி</span>
-                  </li>
-                  <li className="flex gap-3.5 items-start text-sm sm:text-base">
-                    <Icons.CheckCircle2 className="h-5 w-5 text-gold-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 font-semibold leading-relaxed">சட்ட கருத்துருக்கள் வரைவு</span>
-                  </li>
-                </ul>
-              </div>
-            </motion.div>
-          ) : (
-            servicesData.map((service) => {
-              const IconComponent = (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[service.iconName] || Icons.Scale;
-              
-              // Fetch translations from dictionary
-              const serviceDetails = dict.services.items[service.id as keyof typeof dict.services.items] || dict.services.items["legal-consultation"];
+          {servicesData.map((service) => {
+            const IconComponent = (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[service.iconName] || Icons.Scale;
+            
+            // Fetch translations from dictionary
+            const serviceDetails = dict.services.items[service.id as keyof typeof dict.services.items] || dict.services.items["legal-consultation"];
 
-              return (
-                <motion.div
-                  key={service.id}
-                  id={service.id}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.6 }}
-                  className="scroll-mt-28 bg-slate-50 border border-slate-200/60 rounded-3xl p-6 sm:p-10 transition-all duration-300 shadow-sm gold-glow"
-                >
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-                    
-                    {/* Service Left Block: Icon + Description */}
-                    <div className="lg:col-span-5 space-y-4 font-sans">
-                      <div className="inline-flex p-4 bg-gold-500/10 text-gold-600 rounded-2xl border border-gold-500/20">
-                        <IconComponent className="h-7 w-7" />
-                      </div>
-                      <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-wide">
-                        {serviceDetails.title}
-                      </h2>
-                      <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-                        {serviceDetails.description}
-                      </p>
-                      <div className="pt-4 font-sans">
-                        <Link
-                          href="/contact"
-                          className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-gold-600 font-bold hover:text-slate-900 transition-colors duration-200 cursor-pointer"
-                        >
-                          {t("services.inquire")}
-                          <ArrowRight className="h-4 w-4" />
-                        </Link>
-                      </div>
+            return (
+              <motion.div
+                key={service.id}
+                id={service.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6 }}
+                className="scroll-mt-28 bg-slate-50 border border-slate-200/60 rounded-3xl p-6 sm:p-10 transition-all duration-300 shadow-sm gold-glow"
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                  
+                  {/* Service Left Block: Icon + Description */}
+                  <div className="lg:col-span-5 space-y-4 font-sans">
+                    <div className="inline-flex p-4 bg-gold-500/10 text-gold-600 rounded-2xl border border-gold-500/20">
+                      <IconComponent className="h-7 w-7" />
                     </div>
-
-                    {/* Service Right Block: Deliverables & Scope details */}
-                    <div className="lg:col-span-7 bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 space-y-4 font-sans text-slate-700 shadow-sm">
-                      <h3 className="text-slate-800 text-sm uppercase tracking-wider font-semibold border-b border-slate-100 pb-2 flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-gold-500" />
-                        {t("services.scopeTitle")}
-                      </h3>
-                      
-                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {serviceDetails.details.map((detail, idx) => (
-                          <li key={idx} className="flex gap-2.5 items-start text-xs sm:text-sm">
-                            <Icons.CheckCircle2 className="h-4 w-4 text-gold-500 shrink-0 mt-0.5" />
-                            <span className="text-slate-600 leading-normal">{detail}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-wide">
+                      {serviceDetails.title}
+                    </h2>
+                    <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+                      {serviceDetails.description}
+                    </p>
+                    <div className="pt-4 font-sans">
+                      <Link
+                        href="/contact"
+                        className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-gold-600 font-bold hover:text-slate-900 transition-colors duration-200 cursor-pointer"
+                      >
+                        {t("services.inquire")}
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
                     </div>
-
                   </div>
-                </motion.div>
-              );
-            })
-          )}
+
+                  {/* Service Right Block: Deliverables & Scope details */}
+                  <div className="lg:col-span-7 bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 space-y-4 font-sans text-slate-700 shadow-sm">
+                    <h3 className="text-slate-800 text-sm uppercase tracking-wider font-semibold border-b border-slate-100 pb-2 flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold-500" />
+                      {t("services.scopeTitle")}
+                    </h3>
+                    
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {serviceDetails.details.map((detail, idx) => (
+                        <li key={idx} className="flex gap-2.5 items-start text-xs sm:text-sm">
+                          <CheckCircle2 className="h-4 w-4 text-gold-500 shrink-0 mt-0.5" />
+                          <span className="text-slate-600 leading-normal">{detail}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Global Consultation CTA Section */}
