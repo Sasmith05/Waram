@@ -30,7 +30,7 @@ export default function EventsPage() {
           .order("date", { ascending: false });
 
         if (error) {
-          console.error("Failed to fetch events from Supabase, checking local storage:", error);
+          console.warn("Failed to fetch events from Supabase, checking local storage:", error);
           if (typeof window !== "undefined") {
             const stored = localStorage.getItem("waram_mock_events");
             if (stored) {
@@ -45,7 +45,7 @@ export default function EventsPage() {
           setEvents(data);
         }
       } catch (err) {
-        console.error("Error loading events:", err);
+        console.warn("Error loading events:", err);
       } finally {
         setLoading(false);
       }
