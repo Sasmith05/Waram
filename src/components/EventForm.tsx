@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Calendar, Trash2, Upload, ArrowLeft, Loader2, ImageIcon } from "lucide-react";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 interface EventItem {
   id: string;
@@ -19,15 +19,8 @@ interface EventFormProps {
   isEdit?: boolean;
 }
 
-// Helper to convert File to Base64 for local storage persistence
-const fileToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
-};
+
+
 
 export default function EventForm({ initialData, isEdit = false }: EventFormProps) {
   const router = useRouter();
@@ -57,26 +50,14 @@ export default function EventForm({ initialData, isEdit = false }: EventFormProp
         const fileName = `${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
         const filePath = `${eventId}/${fileName}`;
 
-        if (isSupabaseConfigured) {
-          try {
-            // Upload to Supabase Storage in 'events' bucket
-            const { data, error } = await supabase.storage.from("events").upload(filePath, file);
-            if (error) throw error;
+        // Upload to Supabase Storage 'events' bucket
+        const { error } = await supabase.storage.from("events").upload(filePath, file);
+        if (error) throw error;
 
-            // Get Public URL
-            const { data: urlData } = supabase.storage.from("events").getPublicUrl(filePath);
-            if (urlData?.publicUrl) {
-              uploadedUrls.push(urlData.publicUrl);
-            }
-          } catch (uploadErr: any) {
-            console.warn("Supabase storage upload failed, falling back to Base64:", uploadErr);
-            const base64Url = await fileToBase64(file);
-            uploadedUrls.push(base64Url);
-          }
-        } else {
-          // Mock mode: convert to Base64 URL so it persists in localStorage
-          const base64Url = await fileToBase64(file);
-          uploadedUrls.push(base64Url);
+        // Get Public URL
+        const { data: urlData } = supabase.storage.from("events").getPublicUrl(filePath);
+        if (urlData?.publicUrl) {
+          uploadedUrls.push(urlData.publicUrl);
         }
       }
 
@@ -110,41 +91,17 @@ export default function EventForm({ initialData, isEdit = false }: EventFormProp
     };
 
     try {
-      let supabaseSuccess = false;
-      try {
-        if (isEdit) {
-          const { error } = await supabase
-            .from("events")
-            .update(payload)
-            .eq("id", eventId);
-          if (error) throw error;
-        } else {
-          const { error } = await supabase
-            .from("events")
-            .insert(payload);
-          if (error) throw error;
-        }
-        supabaseSuccess = true;
-      } catch (dbErr: any) {
-        console.warn("Supabase event save failed, falling back to local storage:", dbErr);
-      }
-
-      if (!supabaseSuccess && typeof window !== "undefined") {
-        const stored = localStorage.getItem("waram_mock_events");
-        let list = [];
-        if (stored) {
-          try {
-            list = JSON.parse(stored);
-          } catch {
-            list = [];
-          }
-        }
-        if (isEdit) {
-          list = list.map((e: any) => (e.id === eventId ? { ...e, ...payload } : e));
-        } else {
-          list = [{ ...payload, created_at: new Date().toISOString() }, ...list];
-        }
-        localStorage.setItem("waram_mock_events", JSON.stringify(list));
+      if (isEdit) {
+        const { error } = await supabase
+          .from("events")
+          .update(payload)
+          .eq("id", eventId);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from("events")
+          .insert(payload);
+        if (error) throw error;
       }
 
       router.push("/admin/events");

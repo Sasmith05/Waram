@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Calendar, ChevronLeft, ChevronRight, X, Image as ImageIcon } from "lucide-react";
-import { supabase, mockStaticEvents } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface EventItem {
@@ -16,7 +16,7 @@ interface EventItem {
 
 export default function EventsPage() {
   const { locale, t } = useLanguage();
-  const [events, setEvents] = useState<EventItem[]>(mockStaticEvents);
+  const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState<{ eventId: string; index: number } | null>(null);
 
@@ -28,24 +28,11 @@ export default function EventsPage() {
           .from("events")
           .select("*")
           .order("date", { ascending: false });
-
-        if (error) {
-          console.warn("Failed to fetch events from Supabase, checking local storage:", error);
-          if (typeof window !== "undefined") {
-            const stored = localStorage.getItem("waram_mock_events");
-            if (stored) {
-              try {
-                setEvents(JSON.parse(stored));
-              } catch {
-                // ignore
-              }
-            }
-          }
-        } else if (data && data.length > 0) {
-          setEvents(data);
-        }
+        if (error) throw error;
+        setEvents(data || []);
       } catch (err) {
-        console.warn("Error loading events:", err);
+        console.error("Failed to load events from Supabase:", err);
+        setEvents([]);
       } finally {
         setLoading(false);
       }

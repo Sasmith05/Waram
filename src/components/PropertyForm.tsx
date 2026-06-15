@@ -14,7 +14,7 @@ import {
   Map,
   Compass
 } from "lucide-react";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { Property, NearbyFacility } from "@/types/property";
 
 const PROPERTY_TYPES = [
@@ -119,21 +119,14 @@ export default function PropertyForm({ initialData, isEdit = false }: PropertyFo
         const fileName = `${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
         const filePath = `properties/${propertyId}/${fileName}`;
 
-        if (isSupabaseConfigured) {
-          // Upload to Supabase Storage
-          const { data, error } = await supabase.storage.from("properties").upload(filePath, file);
-          if (error) throw error;
+        // Upload to Supabase Storage
+        const { error } = await supabase.storage.from("properties").upload(filePath, file);
+        if (error) throw error;
 
-          // Get Public URL
-          const { data: urlData } = supabase.storage.from("properties").getPublicUrl(filePath);
-          if (urlData?.publicUrl) {
-            uploadedUrls.push(urlData.publicUrl);
-          }
-        } else {
-          // Mock Upload: Add local asset url helper in mock mode
-          // Generate a local object URL to display preview
-          const objectUrl = URL.createObjectURL(file);
-          uploadedUrls.push(objectUrl);
+        // Get Public URL
+        const { data: urlData } = supabase.storage.from("properties").getPublicUrl(filePath);
+        if (urlData?.publicUrl) {
+          uploadedUrls.push(urlData.publicUrl);
         }
       }
 

@@ -13,50 +13,35 @@ import {
   Compass,
   Calendar
 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { adminAuth } from "@/lib/supabase";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<any>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    let mounted = true;
-
-    async function checkAuth() {
-      // Don't guard `/admin/login` page
-      if (pathname === "/admin/login") {
-        setLoading(false);
-        return;
-      }
-
-      const { data } = await supabase.auth.getSession();
-      
-      if (mounted) {
-        if (!data.session) {
-          router.replace("/admin/login");
-        } else {
-          setSession(data.session);
-        }
-        setLoading(false);
-      }
+    // Skip auth check on login page
+    if (pathname === "/admin/login") {
+      setLoading(false);
+      return;
     }
 
-    checkAuth();
-
-    return () => {
-      mounted = false;
-    };
+    // Check simple session — redirect if not logged in
+    if (!adminAuth.isLoggedIn()) {
+      router.replace("/admin/login");
+    } else {
+      setLoading(false);
+    }
   }, [pathname, router]);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
+  const handleLogout = () => {
+    adminAuth.signOut();
     router.replace("/admin/login");
   };
 
-  // If loading and not on login page, show loader
+  // Show loader while checking session (not on login page)
   if (loading && pathname !== "/admin/login") {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center font-sans">
@@ -71,7 +56,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  // If on login page, render child without layout shell
+  // On login page, render child without layout shell
   if (pathname === "/admin/login") {
     return <>{children}</>;
   }
@@ -143,7 +128,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Footer info & Logout */}
         <div className="p-4 border-t border-slate-100 space-y-3">
           <div className="px-4 text-xs font-semibold text-slate-400 truncate">
-            Logged in as: {session?.user?.email || "Admin User"}
+            Logged in as: Admin
           </div>
           <button
             onClick={handleLogout}

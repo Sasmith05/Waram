@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Calendar, Plus, Search, Trash2, Edit2, ImageIcon } from "lucide-react";
-import { supabase, mockStaticEvents } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 interface EventItem {
   id: string;
@@ -14,7 +14,7 @@ interface EventItem {
 }
 
 export default function AdminEventsPage() {
-  const [events, setEvents] = useState<EventItem[]>(mockStaticEvents);
+  const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -25,24 +25,11 @@ export default function AdminEventsPage() {
         .from("events")
         .select("*")
         .order("date", { ascending: false });
-
-      if (error) {
-        console.warn("Failed to load events from Supabase, checking local storage:", error);
-        if (typeof window !== "undefined") {
-          const stored = localStorage.getItem("waram_mock_events");
-          if (stored) {
-            try {
-              setEvents(JSON.parse(stored));
-            } catch {
-              // ignore
-            }
-          }
-        }
-      } else if (data && data.length > 0) {
-        setEvents(data);
-      }
+      if (error) throw error;
+      setEvents(data || []);
     } catch (err: any) {
-      console.warn("Failed to load events", err);
+      console.error("Failed to load events", err);
+      setEvents([]);
     } finally {
       setLoading(false);
     }
@@ -57,58 +44,23 @@ export default function AdminEventsPage() {
     if (!confirmed) return;
 
     try {
-      // Fetch event to get images to delete from storage if needed
       const event = events.find((e) => e.id === id);
-      
-      let supabaseSuccess = false;
-      try {
-        // Delete event from DB
-        const { error } = await supabase.from("events").delete().eq("id", id);
-        if (error) throw error;
-        supabaseSuccess = true;
-      } catch (dbErr: any) {
-        console.warn("Supabase event delete failed, falling back to local storage:", dbErr);
-      }
 
-      // Clean up images in storage (mock storage will handle it gracefully)
+      // Delete from Supabase DB
+      const { error } = await supabase.from("events").delete().eq("id", id);
+      if (error) throw error;
+
+      // Clean up images in storage
       if (event && event.images && event.images.length > 0) {
-        // filter out static mock images and base64 strings from deletion to prevent error
         const userUploadedPaths = event.images
-          .filter((img) => !img.startsWith("/properties/") && !img.startsWith("data:"))
+          .filter((img) => img.startsWith("http") && img.includes("/storage/v1/object/public/events/"))
           .map((img) => {
-            if (!img.startsWith("http")) return img;
-            try {
-              const searchStr = "/storage/v1/object/public/events/";
-              const idx = img.indexOf(searchStr);
-              if (idx !== -1) {
-                return img.substring(idx + searchStr.length);
-              }
-            } catch (err) {
-              // ignore
-            }
-            return img;
+            const searchStr = "/storage/v1/object/public/events/";
+            const idx = img.indexOf(searchStr);
+            return idx !== -1 ? img.substring(idx + searchStr.length) : img;
           });
-
         if (userUploadedPaths.length > 0) {
-          try {
-            await supabase.storage.from("events").remove(userUploadedPaths);
-          } catch (storageErr) {
-            // ignore storage deletion error on fallback
-          }
-        }
-      }
-
-      // Fallback
-      if (!supabaseSuccess && typeof window !== "undefined") {
-        const stored = localStorage.getItem("waram_mock_events");
-        if (stored) {
-          try {
-            const list = JSON.parse(stored);
-            const filtered = list.filter((e: any) => e.id !== id);
-            localStorage.setItem("waram_mock_events", JSON.stringify(filtered));
-          } catch {
-            // ignore
-          }
+          await supabase.storage.from("events").remove(userUploadedPaths);
         }
       }
 

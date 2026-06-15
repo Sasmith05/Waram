@@ -32,37 +32,14 @@ export default function AdminEditEventPage({ params }: PageProps) {
           .select("*")
           .eq("id", id)
           .single();
-
-        if (error) {
-          console.warn("Failed to load event from Supabase, checking local storage:", error);
-          if (typeof window !== "undefined") {
-            const stored = localStorage.getItem("waram_mock_events");
-            if (stored) {
-              try {
-                const list = JSON.parse(stored);
-                const found = list.find((e: any) => e.id === id);
-                if (found) {
-                  setEvent(found);
-                  return;
-                }
-              } catch {
-                // ignore
-              }
-            }
-          }
-          throw error;
-        }
-
-        if (data) {
-          setEvent(data);
-        }
+        if (error) throw error;
+        if (data) setEvent(data);
       } catch (err) {
         console.error("Error loading event details:", err);
       } finally {
         setLoading(false);
       }
     }
-
     loadEvent();
   }, [id]);
 

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Compass, Mail, Lock, AlertCircle, ArrowRight } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { adminAuth } from "@/lib/supabase";
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -13,36 +13,23 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Check if user is already logged in, redirect if so
-    async function checkSession() {
-      const { data } = await supabase.auth.getSession();
-      if (data?.session) {
-        router.replace("/admin/dashboard");
-      }
+    // If already logged in, redirect straight to dashboard
+    if (adminAuth.isLoggedIn()) {
+      router.replace("/admin/dashboard");
     }
-    checkSession();
   }, [router]);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    try {
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (authError) {
-        setError(authError.message);
-      } else if (data?.session) {
-        router.replace("/admin/dashboard");
-      }
-    } catch (err: any) {
-      setError("An unexpected error occurred. Please try again.");
-    } finally {
+    const err = adminAuth.signIn(email, password);
+    if (err) {
+      setError(err);
       setLoading(false);
+    } else {
+      router.replace("/admin/dashboard");
     }
   };
 
@@ -94,7 +81,7 @@ export default function AdminLogin() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@waram.com"
+              placeholder="notaryrajasekar@gmail.com"
               className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 text-sm font-semibold transition-all shadow-xs"
             />
           </div>
