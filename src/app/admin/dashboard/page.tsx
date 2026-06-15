@@ -197,7 +197,7 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="block text-slate-800 font-bold text-xs sm:text-sm font-serif">{prop.price_display}</span>
+                    <span className="block text-slate-800 font-bold text-xs sm:text-sm font-serif">{(prop as any).price_display || `₹${Number(prop.price).toLocaleString("en-IN")}`}</span>
                     <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{prop.property_type.replace("-", " ")}</span>
                   </div>
                 </div>

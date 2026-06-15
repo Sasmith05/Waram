@@ -7,7 +7,8 @@ import PropertyCard from "@/components/PropertyCard";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function PropertiesListing() {
-  const [properties, setProperties] = useState<any[]>(propertiesData);
+  // Start with empty array — always load fresh from DB
+  const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { locale, t } = useLanguage();
 
@@ -15,20 +16,31 @@ export default function PropertiesListing() {
     async function loadProperties() {
       try {
         setLoading(true);
-        const { data, error } = await supabase.from("properties").select("*");
+        const { data, error } = await supabase
+          .from("properties")
+          .select("*")
+          .order("created_at", { ascending: false });
         if (error) throw error;
-        if (data && data.length > 0) {
-          const mapped = data.map((p: any) => {
-            return {
-              ...p,
-              category: p.property_type,
-              priceDisplay: `₹${Number(p.price).toLocaleString("en-IN")}`
-            };
-          });
-          setProperties(mapped);
-        }
+        // Map DB rows to the shape PropertyCard expects
+        const mapped = (data || []).map((p: any) => ({
+          ...p,
+          category: p.property_type,
+          featured: p.featured,
+          isFeatured: p.featured,
+          priceDisplay: p.price_display || `₹${Number(p.price).toLocaleString("en-IN")}`,
+        }));
+        setProperties(mapped);
       } catch (err) {
         console.error("Failed to fetch public properties from Supabase", err);
+        // Only fall back to static data if the request itself failed (network error)
+        const mapped = propertiesData.map((p: any) => ({
+          ...p,
+          category: p.category,
+          featured: p.isFeatured,
+          isFeatured: p.isFeatured,
+          priceDisplay: p.priceDisplay,
+        }));
+        setProperties(mapped);
       } finally {
         setLoading(false);
       }

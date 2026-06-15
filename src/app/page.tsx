@@ -14,7 +14,8 @@ import PropertyCard from "@/components/PropertyCard";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Home() {
-  const [properties, setProperties] = useState<any[]>(propertiesData);
+  // Always start empty — get live data from DB
+  const [properties, setProperties] = useState<any[]>([]);
   const { locale, t } = useLanguage();
 
   const whatsappUrl = `https://wa.me/${contactInfo.whatsappNumber}?text=${encodeURIComponent(
@@ -35,19 +36,21 @@ export default function Home() {
           .limit(3);
 
         if (error) throw error;
-        if (data && data.length > 0) {
-          const mapped = data.map((p: any) => ({
-            ...p,
-            category: p.property_type,
-            categoryDisplay: p.property_type
-              .replace("-", " ")
-              .replace(/\b\w/g, (c: string) => c.toUpperCase()),
-            priceDisplay: `₹${Number(p.price).toLocaleString("en-IN")}`
-          }));
-          setProperties(mapped);
-        }
+        // Always replace state with DB result (even if empty)
+        const mapped = (data || []).map((p: any) => ({
+          ...p,
+          category: p.property_type,
+          isFeatured: p.featured,
+          categoryDisplay: p.property_type
+            .replace("-", " ")
+            .replace(/\b\w/g, (c: string) => c.toUpperCase()),
+          priceDisplay: p.price_display || `₹${Number(p.price).toLocaleString("en-IN")}`
+        }));
+        setProperties(mapped);
       } catch (err) {
         console.error("Failed to fetch featured properties from Supabase", err);
+        // Fallback to static data only on network failure
+        setProperties(propertiesData.filter((p) => p.isFeatured).slice(0, 3));
       }
     }
     loadFeatured();

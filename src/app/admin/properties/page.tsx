@@ -188,7 +188,7 @@ export default function AdminPropertiesList() {
 
                     {/* Price */}
                     <td className="px-6 py-4 text-right whitespace-nowrap font-serif font-bold text-slate-900">
-                      {prop.price_display}
+                      {(prop as any).price_display || `₹${Number(prop.price).toLocaleString("en-IN")}`}
                     </td>
 
                     {/* Status Dropdown Selection */}

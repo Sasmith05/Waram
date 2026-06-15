@@ -1,8 +1,9 @@
 import React from "react";
-import { propertiesData } from "@/data/properties";
 import { supabase } from "@/lib/supabase";
 import PropertyDetailClientView from "./PropertyDetailClientView";
 
+// Force every request to hit the DB — no static pre-rendering
+// This ensures newly created or deleted properties reflect immediately
 export const dynamic = "force-dynamic";
 
 const categories = [
@@ -13,12 +14,6 @@ const categories = [
   { value: "farm-lands", label: "Farm Lands" },
   { value: "investment-properties", label: "Investment Properties" }
 ];
-
-export async function generateStaticParams() {
-  return propertiesData.map((property) => ({
-    id: property.id,
-  }));
-}
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -31,16 +26,17 @@ export default async function PropertyDetailPage({ params }: PageProps) {
   let property: any = null;
   
   try {
-    let data = null;
+    // First try to find by ID
     const { data: idData } = await supabase
       .from("properties")
       .select("*")
       .eq("id", id)
       .single();
 
-    if (idData) {
-      data = idData;
-    } else {
+    let data = idData;
+
+    // If not found by ID, try slug
+    if (!data) {
       const { data: slugData } = await supabase
         .from("properties")
         .select("*")
@@ -55,7 +51,8 @@ export default async function PropertyDetailPage({ params }: PageProps) {
         ...data,
         category: data.property_type,
         categoryDisplay: catObj ? catObj.label : data.property_type,
-        priceDisplay: `₹${Number(data.price).toLocaleString("en-IN")}`,
+        // Derive priceDisplay at render time since it's not a DB column
+        priceDisplay: `\u20b9${Number(data.price).toLocaleString("en-IN")}`,
         detailedDescription: data.detailed_description,
         surveyNumber: data.survey_number,
         pattaStatus: data.patta_status,
@@ -69,30 +66,6 @@ export default async function PropertyDetailPage({ params }: PageProps) {
     }
   } catch (err) {
     console.error("Failed to query property details from Supabase on server", err);
-  }
-
-  // Fallback to static mock data if offline or not found
-  if (!property) {
-    const staticProp = propertiesData.find(
-      (p) => p.id === id || p.slug === id
-    );
-    if (staticProp) {
-      property = {
-        ...staticProp,
-        category: staticProp.category,
-        categoryDisplay: staticProp.categoryDisplay,
-        priceDisplay: staticProp.priceDisplay,
-        detailedDescription: staticProp.detailedDescription,
-        surveyNumber: staticProp.surveyNumber,
-        pattaStatus: staticProp.pattaStatus,
-        roadAccess: staticProp.roadAccess,
-        waterAvailability: staticProp.waterAvailability,
-        electricityAvailability: staticProp.electricityAvailability,
-        googleMapsEmbedUrl: staticProp.googleMapsEmbedUrl,
-        googleMapsRedirectUrl: staticProp.googleMapsRedirectUrl,
-        nearbyFacilities: staticProp.nearbyFacilities || []
-      };
-    }
   }
 
   return <PropertyDetailClientView id={id} initialProperty={property} />;
