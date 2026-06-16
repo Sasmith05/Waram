@@ -90,7 +90,7 @@ export default function EventsPage() {
         {/* Page Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <span className="text-xs uppercase tracking-widest text-gold-600 font-bold font-sans">
-            {locale === "en" ? "Waram Gallery" : "வாரம் கேலரி"}
+            {locale === "en" ? "Waram Gallery" : "வரம் கேலரி"}
           </span>
           <h1 className="text-4xl sm:text-5xl font-serif font-bold text-slate-900 tracking-wide">
             {locale === "en" ? (
